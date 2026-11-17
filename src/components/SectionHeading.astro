@@ -1,0 +1,36 @@
+---
+// セクションの見出し（TOP など）。英字の大見出し（Jost の細字・濃紺）＋和文の小さなラベル＋和文の見出し
+// 仕様: docs/design.md の「文字」
+interface Props {
+  // 英字の大見出し（例: ABOUT US）
+  en: string;
+  // 英字の横に添える和文（例: 私たちについて）
+  label: string;
+  // 和文の見出し（h2）。改行したい位置は <br /> を入れられるようスロットでも渡せる
+  title?: string;
+  // 濃紺の地の上に置くとき
+  inverted?: boolean;
+}
+const { en, label, title, inverted = false } = Astro.props;
+---
+
+<div>
+  <p
+    data-reveal
+    class:list={[
+      "font-en text-[40px] leading-none font-light lg:text-[88px]",
+      inverted ? "text-on-primary" : "text-primary",
+    ]}
+  >
+    {en}
+  </p>
+  <p
+    data-reveal
+    class:list={["mt-3 text-xs font-medium tracking-[0.1em] lg:mt-5 lg:text-sm", inverted ? "text-on-primary/70" : "text-muted-foreground"]}
+  >
+    {label}
+  </p>
+  <h2 data-reveal class="mt-8 text-[22px] leading-[1.5] font-medium lg:mt-12 lg:text-4xl">
+    <slot>{title}</slot>
+  </h2>
+</div>

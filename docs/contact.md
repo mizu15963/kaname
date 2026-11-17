@@ -8,11 +8,11 @@
 | `src/pages/contact/thanks.astro` | `/contact/thanks/` | ビルド時。送信完了（noindex・サイトマップに載せない） |
 | `src/libs/contact.ts` | — | 入力のチェック、Turnstile の確認、microCMS への保存（サーバー側だけで使う） |
 
-- 見た目は運営者情報・プライバシーポリシーと同じく、`Layout` の `plain`（PC 幅の左右を出さない）。
+- 見た目はほかの下層ページと同じ（冒頭は `PageHeader`、フォームは幅 720px まで）。
 
 ## 導線
 
-- フッターの「サイトについて」、運営者情報の表の「お問い合わせ」、プライバシーポリシーの「お問い合わせ窓口」。
+- ヘッダー・フッターの CONTACT、TOP・SERVICE の CONTACT US のボタン、プライバシーポリシーの「お問い合わせ窓口」。
 
 ## 入力項目
 

@@ -19,7 +19,9 @@ export const GET: APIRoute = async ({ site }) => {
   // 載せないページ: 404、お問い合わせの送信完了
   const entries: Entry[] = [
     { path: "/" },
-    { path: "/operator/" },
+    { path: "/about/" },
+    { path: "/service/" },
+    { path: "/company/" },
     { path: "/privacy-policy/" },
     { path: CONTACT.path },
   ];

@@ -1,16 +1,27 @@
 ---
-// TOP（仕様: docs/site.md の「TOP」）
+// TOP（仕様: docs/site.md の「TOP」。原稿は制作指示書の 03）
 import Layout from "@layouts/Layout.astro";
-import Faq from "@components/Faq.astro";
-import { CONTACT, SITE } from "@constants/index.ts";
+import SectionHeading from "@components/SectionHeading.astro";
+import MoreLink from "@components/MoreLink.astro";
+import { SITE } from "@constants/index.ts";
 import { siteJsonLd, toJsonLdString } from "@libs/structuredData.ts";
 export const prerender = true;
 
-// よくある質問（画面の表示と構造化データ FAQPage の両方に使う）。ハブページの質問・運営者情報の注意事項と食い違わないようにする
-const faqs = [
+// 事業内容（SERVICE ページの各ブロックへのリンク）
+const services = [
   {
-    question: "よくある質問（仮）",
-    answer: "回答（仮）。仕様が決まったら差し替える。",
+    no: "01",
+    title: "営業代行・営業支援事業",
+    text: "企業の営業活動をサポートし、新規顧客開拓や販路拡大を支援します。お客様の事業内容やニーズに合わせて、柔軟な営業支援サービスを提供します。",
+    href: "/service/#service-01",
+    image: "part-2",
+  },
+  {
+    no: "02",
+    title: "各種ツール・システム販売事業",
+    text: "ビジネスや個人のさまざまなニーズに応えるツール・システムを取り扱っています。商品の特性や利用目的に合わせた情報提供を行い、お客様に適したサービスのご案内を目指します。",
+    href: "/service/#service-02",
+    image: "part-7",
   },
 ];
 
@@ -18,7 +29,7 @@ const Meta = { title: SITE.title };
 const site = Astro.site ?? new URL(Astro.url.origin);
 ---
 
-<Layout Meta={Meta} bleed>
+<Layout Meta={Meta}>
   <Fragment slot="head">
     <script
       type="application/ld+json"
@@ -26,85 +37,123 @@ const site = Astro.site ?? new URL(Astro.url.origin);
     />
   </Fragment>
 
-  {
-    /*
-      キャッチコピー: マーカーを引く
-      動き（docs/design.md の「動き」）: 開いたときに見出し → ボタンの順に下からふわっと出し、出たあとにマーカーを左から引く。右上の飾りはゆっくり揺れる
-    */
-  }
-  <section
-    class="relative overflow-hidden border-b border-line px-5 pt-10 pb-12"
-  >
-    {/* 飾り */}
-    <div aria-hidden="true" class="pointer-events-none absolute top-8 right-6">
-      <span class="float-slow block size-12 rotate-12 rounded-box bg-highlight"
-      ></span>
+  {/* ① メインビジュアル: 左寄せの大きなコピー。画像は PC では右、スマホでは上に置き、コピーとの境目に白のグラデーションを重ねる */}
+  <section class="relative isolate flex min-h-[90svh] items-end overflow-hidden lg:min-h-[calc(100svh-5.5rem)] lg:items-center">
+    <img
+      src="/images/parts/part-1.webp"
+      srcset="/images/parts/part-1-800.webp 800w, /images/parts/part-1.webp 1600w"
+      sizes="(min-width: 1024px) 60vw, 100vw"
+      alt=""
+      width="1600"
+      height="900"
+      fetchpriority="high"
+      class="absolute inset-x-0 top-0 -z-10 h-[58%] w-full object-cover object-[70%_center] lg:inset-y-0 lg:left-auto lg:h-full lg:w-[62%]"
+    />
+    <div class="absolute inset-0 -z-10 bg-linear-to-t from-background from-42% to-background/0 to-60% lg:bg-linear-to-r lg:from-background lg:from-40% lg:via-background/70 lg:via-55% lg:to-background/0 lg:to-75%"></div>
+    <div class="container-page pb-16 lg:pb-0">
+      <p data-reveal class="font-en text-xs tracking-[0.2em] text-primary lg:text-sm">
+        SALES SUPPORT &amp; BUSINESS SOLUTIONS
+      </p>
+      <h1 data-reveal class="mt-5 text-[30px] leading-[1.5] font-medium tracking-[0.02em] lg:mt-8 lg:text-[52px]">
+        ビジネスの可能性を、<br />さらに先へ。
+      </h1>
+      <p data-reveal class="mt-6 max-w-[32em] text-sm leading-[1.9] font-medium lg:mt-10 lg:text-[17px]">
+        営業支援から各種ツールの提供まで。<br />
+        私たちは、人と企業をつなぎ、新たなビジネスの可能性を広げるパートナーです。
+      </p>
     </div>
-    <div
-      aria-hidden="true"
-      class="pointer-events-none absolute top-28 right-14"
-    >
-      <span
-        class="float-slow-delay block h-7 w-1.5 rotate-[30deg] rounded-full bg-primary"
-      ></span>
-    </div>
-    <span
-      class="relative inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold text-white"
-      >ラベル（仮）</span
-    >
-    <h1
-      data-reveal
-      class="relative mt-5 text-[2rem] leading-tight font-black tracking-tight"
-    >
-      <span class="marker-draw">{SITE.catchphrase}</span>
-    </h1>
-    {
-      /* サイト名で検索したときに TOP が上に出るよう、見出しのすぐ下の文にサイト名を入れる（docs/site.md の「TOP」） */
-    }
-    <p class="relative mt-5 text-sm leading-relaxed">
-      {
-        SITE.title
-      }は、〇〇について解説する情報サイトです。（仮の文。仕様が決まったら差し替える）
-    </p>
-    <div data-reveal class="relative mt-8 flex flex-wrap gap-3">
-      <a
-        href={CONTACT.path}
-        class="group inline-flex items-center gap-2 rounded-button border-2 border-primary bg-highlight px-6 py-3 text-sm font-bold text-highlight-foreground transition-[background-color,scale] hover:bg-highlight-hover active:scale-[0.97] motion-reduce:transition-none"
-        >お問い合わせ<span
-          aria-hidden="true"
-          class="transition-transform group-hover:translate-x-1 motion-reduce:transition-none"
-          >→</span
-        ></a
-      >
-      <a
-        href="#about"
-        class="group inline-flex items-center gap-2 rounded-button border-2 border-primary bg-background px-6 py-3 text-sm font-bold transition-[background-color,scale] hover:bg-section active:scale-[0.97] motion-reduce:transition-none"
-        >くわしく見る<span
-          aria-hidden="true"
-          class="transition-transform group-hover:translate-y-0.5 motion-reduce:transition-none"
-          >↓</span
-        ></a
-      >
+    <div aria-hidden="true" class="font-en absolute right-5 bottom-6 hidden items-center gap-3 text-[11px] tracking-[0.2em] text-muted-foreground lg:right-10 lg:flex [writing-mode:vertical-rl]">
+      SCROLL<span class="block h-16 w-px bg-line"></span>
     </div>
   </section>
 
-  <div class="space-y-14 px-5 pt-12 pb-14">
-    <section id="about" class="scroll-mt-20 rounded-box bg-section p-6">
-      <h2 data-reveal class="text-lg font-black">{SITE.title}について</h2>
-      <p class="mt-3 text-sm leading-relaxed">
-        サイトの紹介文（仮）。
-      </p>
-      <a
-        href="/operator/"
-        class="group mt-4 inline-block text-sm font-bold underline hover:text-link-hover"
-        >運営者情報<span
-          aria-hidden="true"
-          class="ml-1 inline-block transition-transform group-hover:translate-x-1 motion-reduce:transition-none"
-          >→</span
-        ></a
-      >
-    </section>
+  {/* ② ABOUT US */}
+  <section class="py-20 lg:py-40">
+    <div class="container-page grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20">
+      <div>
+        <SectionHeading en="ABOUT US" label="私たちについて">
+          企業の成長を、<br />ともに支える。
+        </SectionHeading>
+        <div data-reveal class="mt-8 max-w-[34em] space-y-5 lg:mt-10">
+          <p>私たちは、営業代行・営業支援を中心に、企業の事業拡大をサポートしています。</p>
+          <p>新たな顧客との接点を生み出し、ビジネスの可能性を広げること。そして、多様なニーズに応えるサービスやツールを提供すること。</p>
+          <p>一つひとつのつながりを大切にしながら、企業とともに成長するビジネスパートナーを目指します。</p>
+        </div>
+        <MoreLink href="/about/" class="mt-10 lg:mt-14">MORE ABOUT US</MoreLink>
+      </div>
+      <div data-reveal class="zoom-on-hover overflow-hidden rounded-box">
+        <img
+          src="/images/parts/part-4.webp"
+          srcset="/images/parts/part-4-800.webp 800w, /images/parts/part-4.webp 1600w"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          alt=""
+          width="1600"
+          height="800"
+          loading="lazy"
+          class="aspect-[4/3] w-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
 
-    <Faq faqs={faqs} />
-  </div>
+  {/* ③ OUR BUSINESS */}
+  <section class="bg-section py-20 lg:py-40">
+    <div class="container-page">
+      <SectionHeading en="OUR BUSINESS" label="事業内容">
+        多様なサービスで、<br class="lg:hidden" />ビジネスを支える。
+      </SectionHeading>
+      <ul class="mt-12 grid gap-10 lg:mt-20 lg:grid-cols-2 lg:gap-10">
+        {
+          services.map((service) => (
+            <li data-reveal>
+              <a href={service.href} class="group block">
+                <div class="zoom-on-hover overflow-hidden rounded-box">
+                  <img
+                    src={`/images/parts/${service.image}.webp`}
+                    srcset={`/images/parts/${service.image}-800.webp 800w, /images/parts/${service.image}.webp 1600w`}
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    alt=""
+                    width="1600"
+                    height="900"
+                    loading="lazy"
+                    class="aspect-[16/9] w-full object-cover"
+                  />
+                </div>
+                <p class="font-en mt-6 text-sm tracking-[0.1em] text-primary">SERVICE {service.no}</p>
+                <h3 class="mt-2 flex items-center justify-between gap-4 text-lg font-bold lg:text-xl">
+                  {service.title}
+                  <span aria-hidden="true" class="font-en text-primary transition-transform group-hover:translate-x-1 motion-reduce:transition-none">→</span>
+                </h3>
+                <p class="mt-4 text-muted-foreground">{service.text}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <MoreLink href="/service/" variant="outline" class="mt-12 lg:mt-16">VIEW OUR SERVICES</MoreLink>
+    </div>
+  </section>
+
+  {/* ④ CONTACT: 濃紺の地の帯 */}
+  <section class="relative isolate overflow-hidden bg-primary py-20 text-on-primary lg:py-36">
+    <img
+      src="/images/parts/part-9.webp"
+      srcset="/images/parts/part-9-800.webp 800w, /images/parts/part-9.webp 1600w"
+      sizes="100vw"
+      alt=""
+      width="1600"
+      height="800"
+      loading="lazy"
+      class="absolute inset-0 -z-10 h-full w-full object-cover opacity-60"
+    />
+    <div class="container-page">
+      <SectionHeading en="CONTACT" label="お問い合わせ" inverted>
+        新しい可能性を、ともに。
+      </SectionHeading>
+      <p data-reveal class="mt-8 max-w-[34em] text-on-primary/85 lg:mt-10">
+        営業支援に関するご相談や、各種ツールについてのお問い合わせなど、お気軽にご連絡ください。
+      </p>
+      <MoreLink href="/contact/" variant="inverted" class="mt-10 lg:mt-14">CONTACT US</MoreLink>
+    </div>
+  </section>
 </Layout>

@@ -1,0 +1,111 @@
+---
+// SERVICE（事業内容。原稿は制作指示書の 05）
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import ProductCard from "@components/ProductCard.astro";
+import MoreLink from "@components/MoreLink.astro";
+export const prerender = true;
+
+// SERVICE 01 の主な支援領域。TODO(仕様): 実際の提供内容に合わせて公開前に確定する（指示書 05 の注記）
+const supportAreas = [
+  "新規顧客開拓支援",
+  "営業活動の代行",
+  "販路拡大支援",
+  "営業戦略・営業体制の構築支援",
+];
+
+// SERVICE 02 の取扱商品。商品が増えたらここに足す
+// TODO(仕様): 商品仕様・特許表記・販売主体と販売権限・契約形態を確認のうえ正式掲載する。FX 自動売買ツールは法令確認とリスク表示が必要（指示書 05・09）
+const products = [
+  {
+    name: "TREVIAN MOMENTUM",
+    kind: "FX自動売買システム",
+    text: "システムの特徴、利用環境、リスクなどの詳細は公式サイトをご確認ください。",
+    url: "https://trevianmomentum.com/",
+    notes: [
+      "（仮）FX取引には元本を割り込むリスクがあります。リスク表示・販売形態の文言は確認後に差し替えます。",
+    ],
+  },
+];
+
+const Meta = {
+  title: "事業内容",
+  description:
+    "営業代行・営業支援事業と、各種ツール・システム販売事業のご紹介です。新規顧客開拓から営業体制の構築まで、事業の成長を支えます。",
+};
+---
+
+<Layout Meta={Meta}>
+  <PageHeader en="Our Business" title="事業内容" />
+
+  <section id="service-01" class="scroll-mt-24 py-20 lg:scroll-mt-28 lg:py-36">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-20">
+      <div>
+        <p data-reveal class="font-en text-[56px] leading-none font-light text-primary lg:text-[96px]">01</p>
+        <p data-reveal class="mt-4 text-sm font-medium tracking-[0.1em] text-muted-foreground">営業代行・営業支援</p>
+        <h2 data-reveal class="mt-6 text-[22px] leading-[1.5] font-medium lg:text-4xl">営業活動に、<br />新たな推進力を。</h2>
+        <p data-reveal class="mt-8 max-w-[34em]">
+          企業の営業活動におけるさまざまな課題に対し、柔軟な営業支援を提供します。新規顧客の開拓から営業活動のサポートまで、お客様のニーズに合わせた取り組みを通じて、事業の成長を支えます。
+        </p>
+        <ul data-reveal class="mt-10 border-t border-line-strong">
+          {
+            supportAreas.map((area, index) => (
+              <li class="flex items-baseline gap-5 border-b border-line py-5">
+                <span class="font-en text-sm text-primary">{String(index + 1).padStart(2, "0")}</span>
+                <span class="font-medium">{area}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div data-reveal class="overflow-hidden rounded-box lg:sticky lg:top-32">
+        <img
+          src="/images/parts/part-2.webp"
+          srcset="/images/parts/part-2-800.webp 800w, /images/parts/part-2.webp 1600w"
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          alt=""
+          width="1600"
+          height="900"
+          class="aspect-[4/3] w-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section id="service-02" class="scroll-mt-24 bg-section py-20 lg:scroll-mt-28 lg:py-36">
+    <div class="container-page">
+      <div class="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-20">
+        <div>
+          <p data-reveal class="font-en text-[56px] leading-none font-light text-primary lg:text-[96px]">02</p>
+          <p data-reveal class="mt-4 text-sm font-medium tracking-[0.1em] text-muted-foreground">各種ツール・システム販売</p>
+          <h2 data-reveal class="mt-6 text-[22px] leading-[1.5] font-medium lg:text-4xl">新しい選択肢を、<br />もっと身近に。</h2>
+          <p data-reveal class="mt-8 max-w-[34em]">
+            さまざまな用途やニーズに対応したツール・システムの販売を行っています。各商品の特徴や利用条件をわかりやすくご案内し、お客様が目的に合わせて選択できるようサポートします。
+          </p>
+        </div>
+        <div data-reveal class="overflow-hidden rounded-box">
+          <img
+            src="/images/parts/part-8.webp"
+            srcset="/images/parts/part-8-800.webp 800w, /images/parts/part-8.webp 1600w"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+            alt=""
+            width="1600"
+            height="800"
+            loading="lazy"
+            class="aspect-[4/3] w-full object-cover"
+          />
+        </div>
+      </div>
+
+      <h3 data-reveal class="font-en mt-16 text-sm tracking-[0.1em] text-primary lg:mt-24">PRODUCTS<span class="ml-3 font-body text-xs text-muted-foreground">取扱商品の一例</span></h3>
+      <div data-reveal class="mt-6 border-b border-line">
+        {products.map((product) => <ProductCard {...product} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-page py-20 lg:py-32">
+    <p data-reveal class="max-w-[34em]">営業支援に関するご相談や、各種ツールについてのお問い合わせは、お気軽にご連絡ください。</p>
+    <MoreLink href="/contact/" class="mt-8">CONTACT US</MoreLink>
+  </section>
+</Layout>

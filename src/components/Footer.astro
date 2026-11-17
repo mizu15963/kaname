@@ -1,43 +1,43 @@
 ---
-// フッター（画面幅いっぱい。黒地に白文字。仕様: docs/design.md の「レイアウト」）
+// フッター（濃紺の地に白文字。仕様: docs/design.md の「レイアウト」）
 import Logo from "@components/Logo.astro";
 import { NAV, SITE } from "@constants/index.ts";
-
-const groups = [
-  { title: "メニュー", links: [...NAV.main] },
-  { title: "サイトについて", links: [...NAV.footer] },
-];
 ---
 
-<footer class="bg-primary px-5 pt-10 pb-8 text-white lg:px-10 lg:pt-14">
-  <div class="lg:flex lg:justify-between lg:gap-10">
-    <div>
+<footer class="bg-primary text-on-primary">
+  <div class="container-page py-14 lg:py-20">
+    <div class="lg:flex lg:items-start lg:justify-between lg:gap-10">
       <a href="/" class="inline-block"><Logo inverted /></a>
-      <p class="mt-3 text-xs leading-relaxed text-white/70">
-        {SITE.catchphrase}
-      </p>
+      <nav aria-label="フッターのメニュー" class="mt-10 lg:mt-0">
+        <ul class="grid grid-cols-2 gap-x-8 gap-y-5 lg:flex lg:gap-10">
+          {
+            NAV.main.map((item) => (
+              <li>
+                <a href={item.href} class="group block">
+                  <span class="font-en block text-sm font-semibold tracking-[0.1em] group-hover:underline">
+                    {item.label}
+                  </span>
+                  <span class="block text-xs text-on-primary/60">{item.ja}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
     </div>
-    <nav class="mt-8 grid grid-cols-2 gap-6 lg:mt-0 lg:gap-16">
-      {
-        groups.map((group) => (
-          <div>
-            <p class="text-xs font-bold text-white/60">{group.title}</p>
-            <ul class="mt-3 space-y-3 text-sm">
-              {group.links.map((link) => (
-                <li>
-                  <a href={link.href} class="hover:underline">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      }
-    </nav>
+    <div class="mt-14 flex flex-col gap-4 border-t border-on-primary/20 pt-6 text-xs text-on-primary/60 lg:flex-row lg:items-center lg:justify-between">
+      <ul class="flex gap-6">
+        {
+          NAV.footer.map((item) => (
+            <li>
+              <a href={item.href} class="hover:text-on-primary hover:underline">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="font-en tracking-[0.08em]">&copy; {new Date().getFullYear()} {SITE.title}</p>
+    </div>
   </div>
-  <p class="mt-10 text-xs text-white/60 lg:mt-14">
-    &copy; {new Date().getFullYear()}
-    {SITE.title}
-  </p>
 </footer>

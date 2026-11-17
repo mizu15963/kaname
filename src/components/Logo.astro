@@ -1,9 +1,9 @@
 ---
-// ロゴ（TODO(仕様): ロゴの画像が決まるまでサイト名の文字を出す。画像にしたら public/images/logo.png・logo-white.png を置き、<img> に替える）（docs/design.md の「画像・アイコン」）
+// ロゴ（TODO(仕様): ロゴの画像が届くまで社名の文字を出す。画像にしたら public/images/logo.png・logo-white.png を置き、<img> に替える）（docs/design.md の「画像・アイコン」）
 import { SITE } from "@constants/index.ts";
 
 interface Props {
-  // 黒い背景の上に置くとき（フッター）
+  // 濃紺の地の上に置くとき（フッター）
   inverted?: boolean;
   class?: string;
 }
@@ -12,8 +12,8 @@ const { inverted = false, class: className } = Astro.props;
 
 <span
   class:list={[
-    "inline-block text-xl leading-10 font-black tracking-tight",
-    inverted ? "text-white" : "text-foreground",
+    "inline-block text-lg leading-none font-bold tracking-[0.08em] lg:text-xl",
+    inverted ? "text-on-primary" : "text-foreground",
     className,
   ]}>{SITE.title}</span
 >

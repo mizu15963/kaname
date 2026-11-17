@@ -1,0 +1,49 @@
+---
+// 取扱商品の紹介（SERVICE ページ）。商品が増えたら service.astro の products に足すだけで並ぶ（docs/site.md の「SERVICE」）
+interface Props {
+  // 商品名（英字の正式名称など）
+  name: string;
+  // 種類（例: FX自動売買システム）
+  kind: string;
+  // 説明
+  text: string;
+  // 公式サイト（外部リンク。別タブで開く）
+  url?: string;
+  // 注意書き（リスク表示など）。小さく出す
+  notes?: string[];
+}
+const { name, kind, text, url, notes = [] } = Astro.props;
+---
+
+<article class="border-t border-line-strong py-8 lg:grid lg:grid-cols-[1fr_1.6fr] lg:gap-12 lg:py-12">
+  <div>
+    <p class="text-xs font-medium tracking-[0.1em] text-muted-foreground">{kind}</p>
+    <h4 class="font-en mt-2 text-2xl font-normal tracking-[0.06em] lg:text-3xl">{name}</h4>
+  </div>
+  <div class="mt-5 lg:mt-0">
+    <p>{text}</p>
+    {
+      url && (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener"
+          class="group font-en mt-6 inline-flex items-center gap-2 text-sm font-semibold tracking-[0.08em] text-link underline hover:text-link-hover"
+        >
+          OFFICIAL SITE
+          <span aria-hidden="true" class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+          <span class="sr-only">（公式サイトが別のタブで開きます）</span>
+        </a>
+      )
+    }
+    {
+      notes.length > 0 && (
+        <ul class="mt-6 space-y-1 text-xs leading-relaxed text-muted-foreground">
+          {notes.map((note) => (
+            <li>※ {note}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>

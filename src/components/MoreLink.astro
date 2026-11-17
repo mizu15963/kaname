@@ -1,0 +1,27 @@
+---
+// 英字のボタン（MORE ABOUT US など）。主要 = 濃紺の地＋白文字、outline = 濃紺の枠線、inverted = 白の地＋濃紺の文字（濃紺の帯の上）
+// ホバーは色が少し変わる程度、矢印が右へ動く。影は付けない（docs/design.md の「ボタン」）
+interface Props {
+  href: string;
+  variant?: "primary" | "outline" | "inverted";
+  class?: string;
+}
+const { href, variant = "primary", class: className } = Astro.props;
+const variantClass = {
+  primary: "bg-primary text-on-primary hover:bg-primary-hover",
+  outline: "border border-primary text-primary hover:bg-section",
+  inverted: "bg-background text-primary hover:bg-section",
+}[variant];
+---
+
+<a
+  href={href}
+  class:list={[
+    "group font-en inline-flex min-h-14 min-w-64 items-center justify-between gap-6 rounded-button px-7 text-sm font-semibold tracking-[0.08em] transition-colors lg:text-[15px]",
+    variantClass,
+    className,
+  ]}
+>
+  <slot />
+  <span aria-hidden="true" class="transition-transform group-hover:translate-x-1 motion-reduce:transition-none">→</span>
+</a>

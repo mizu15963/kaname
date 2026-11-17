@@ -1,0 +1,35 @@
+---
+// ABOUT（私たちについて。原稿は制作指示書の 04）
+import Layout from "@layouts/Layout.astro";
+import PageHeader from "@components/PageHeader.astro";
+import MoreLink from "@components/MoreLink.astro";
+export const prerender = true;
+
+const Meta = {
+  title: "私たちについて",
+  description:
+    "営業活動を通じて企業と顧客をつなぎ、新たなビジネス機会の創出を支援しています。各種ツール・システムの提供にも取り組んでいます。",
+};
+---
+
+<Layout Meta={Meta}>
+  <PageHeader en="About Us" title="私たちについて" image="part-6" />
+
+  <section class="container-page py-20 lg:py-40">
+    <div class="lg:grid lg:grid-cols-[1fr_1.4fr] lg:gap-20">
+      <h2 data-reveal class="text-[22px] leading-[1.5] font-medium lg:text-4xl">
+        つながりから、<br />新たな価値を。
+      </h2>
+      <div data-reveal class="mt-8 max-w-[36em] space-y-6 lg:mt-0">
+        <p>ビジネスの成長には、新しい出会いと、変化に対応する柔軟な発想が欠かせません。</p>
+        <p>私たちは、営業活動を通じて企業と顧客をつなぎ、新たなビジネス機会の創出を支援しています。</p>
+        <p>また、多様化するニーズに応えるため、各種ツールやシステムの提供にも取り組んでいます。</p>
+        <p>お客様との信頼関係を大切にし、長期的な視点で価値を提供できる企業を目指します。</p>
+        <div class="flex flex-wrap gap-4 pt-6">
+          <MoreLink href="/service/">OUR SERVICES</MoreLink>
+          <MoreLink href="/company/" variant="outline">COMPANY PROFILE</MoreLink>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

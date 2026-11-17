@@ -1,6 +1,6 @@
 # サイト全体
 
-ページは Astro でビルド時に作り、Cloudflare Workers で配信するサイトです。ページの本文は各ページのファイルに書きます。microCMS はお問い合わせの保存（`contacts`）にだけ使います（記事・カテゴリは今回の要件にないため作らない）。本番のドメインは `astro.config.mjs` の `site`（TODO: 決まったら差し替える）。
+営業代行・営業支援を主軸とし、各種ツール・システム販売も行う会社のコーポレートサイトです（制作指示書: ユーザーの PC の `D:\ito_project\kaname\sheres\`）。ページは Astro でビルド時に作り、Cloudflare Workers で配信します。ページの本文は各ページのファイルに直接書きます。microCMS はお問い合わせの保存（`contacts`）にだけ使います。本番のドメインは `astro.config.mjs` の `site`（TODO: 決まったら差し替える）。
 
 ## URL
 
@@ -14,7 +14,9 @@
 | URL | ページ | ファイル |
 |---|---|---|
 | `/` | TOP | `src/pages/index.astro` |
-| `/operator/` | 運営者情報 | `src/pages/operator.astro` |
+| `/about/` | ABOUT（私たちについて） | `src/pages/about.astro` |
+| `/service/` | SERVICE（事業内容） | `src/pages/service.astro` |
+| `/company/` | COMPANY（会社概要） | `src/pages/company.astro` |
 | `/privacy-policy/` | プライバシーポリシー | `src/pages/privacy-policy.astro` |
 | `/contact/` `/contact/thanks/` | お問い合わせフォーム・送信完了 | `src/pages/contact/`（[contact.md](contact.md)） |
 | `/sitemap.xml` | サイトマップ | `src/pages/sitemap.xml.ts` |
@@ -22,13 +24,18 @@
 
 ## TOP
 
-- 上から、キャッチコピー（`SITE.catchphrase`）とお問い合わせへのボタン、サイトについて（運営者情報へのリンク）、よくある質問（開閉式）。TODO(仕様): 構成が決まったら差し替える。
-- 動き（画面に入ったら出す・マーカー・ホバー）は [design.md](design.md) の「動き」。
-- サイト名で検索したときに TOP が上に出るよう、タイトルはサイト名だけにし、キャッチコピーのすぐ下の文を「（サイト名）は、〜」で始める。
+- 上から、メインビジュアル（コピー「ビジネスの可能性を、さらに先へ。」＋リード）→ ABOUT US（→ /about/）→ OUR BUSINESS（SERVICE 01・02 のカード → /service/ の各ブロック）→ CONTACT（濃紺の帯 → /contact/）。原稿は制作指示書の 03。
+- `<title>` は社名だけにする（サイト名で検索したときに TOP が上に出やすい）。
 
-## 運営者情報
+## SERVICE
 
-- 運営者・サイトについて・注意事項。表の「お問い合わせ」はお問い合わせフォームへのリンク。
+- SERVICE 01（`#service-01`）: 見出し・本文・主な支援領域のリスト。支援領域は実際の提供内容に合わせて公開前に確定する（`TODO(仕様)`）。
+- SERVICE 02（`#service-02`）: 見出し・本文と、取扱商品（`ProductCard` 部品）。商品は `service.astro` の `products` に足すだけで並ぶ。商品の公式サイトへのリンクは別タブで開く。
+- FX 自動売買ツールは、販売・勧誘・助言の実態に合わせた法令確認とリスク表示が要る。文言は確認後に差し替える（`TODO(仕様)`。制作指示書 09）。
+
+## COMPANY
+
+- 参考サイトの会社情報ページと同じ形の2列の表（項目名｜内容）。値は要確認（`TODO(仕様)`）。
 
 ## プライバシーポリシー
 

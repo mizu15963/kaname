@@ -2,7 +2,7 @@
 // お問い合わせの送信完了（仕様: docs/contact.md）
 // フォームから移動してくるだけのページなので、検索エンジンには載せない
 import Layout from "@layouts/Layout.astro";
-import PageHeader from "@components/PageHeader.astro";
+import MoreLink from "@components/MoreLink.astro";
 export const prerender = true;
 
 const Meta = {
@@ -11,19 +11,15 @@ const Meta = {
 };
 ---
 
-<Layout Meta={Meta} plain>
-  <div class="space-y-8 py-4">
-    <PageHeader title="お問い合わせを受け付けました">
-      <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+<Layout Meta={Meta}>
+  <div class="container-page space-y-8 pt-14 pb-24 lg:pt-36 lg:pb-40">
+    <p class="font-en text-sm tracking-[0.1em] text-primary lg:text-xl">Thank You</p>
+    <h1 class="text-[24px] leading-[1.4] font-bold lg:text-4xl">お問い合わせを受け付けました</h1>
+    <div>
+      <p class="max-w-[36em]">
         お問い合わせいただき、ありがとうございます。内容を確認のうえ、必要に応じてご入力のメールアドレスにご連絡します。お返事までお時間をいただく場合があります。
       </p>
-    </PageHeader>
-    <div class="flex flex-wrap gap-3">
-      <a
-        href="/"
-        class="rounded-button border-2 border-primary bg-highlight px-5 py-3 text-sm font-bold text-highlight-foreground hover:bg-highlight-hover"
-        >TOP へ</a
-      >
     </div>
+    <MoreLink href="/">BACK TO TOP</MoreLink>
   </div>
 </Layout>
