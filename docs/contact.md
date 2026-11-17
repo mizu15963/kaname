@@ -56,8 +56,8 @@
 1. **microCMS**: `contacts` API を作る（[microcms.md](microcms.md) の「API の作り方」。`schema/contacts.json` をインポート）。
 2. **microCMS**: 今の API キー（`MICROCMS_API_KEY`）の権限に、`contacts` の **POST だけ**を足す（GET は付けない。キーが漏れても、お問い合わせの個人情報を読み出されないように）。
 3. **microCMS**: `contacts` の **API 設定 → Webhook → メール通知** で、届いたときに知らせるメールアドレスを登録する（デプロイフックは登録しない。お問い合わせのたびに再ビルドされるため）。
-4. **Cloudflare**: ダッシュボード → **Turnstile** → **ウィジェットを追加**。ホスト名に 本番のドメイン（`www.<ドメイン>`）と `new-site.<アカウント名>.workers.dev` を入れ、モードは「管理（Managed）」。サイトキーとシークレットキーができる。
-5. **Cloudflare**: Worker `new-site` の **設定（Settings）→ 変数とシークレット（Variables and Secrets）**（ビルド用ではなく実行時のほう）に、種類「シークレット」で次の4つを入れる。
+4. **Cloudflare**: ダッシュボード → **Turnstile** → **ウィジェットを追加**。ホスト名に 本番のドメイン（`www.<ドメイン>`）と `kaname.<アカウント名>.workers.dev` を入れ、モードは「管理（Managed）」。サイトキーとシークレットキーができる。
+5. **Cloudflare**: Worker `kaname` の **設定（Settings）→ 変数とシークレット（Variables and Secrets）**（ビルド用ではなく実行時のほう）に、種類「シークレット」で次の4つを入れる。
 
 | 名前 | 内容 |
 |---|---|

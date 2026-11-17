@@ -10,7 +10,7 @@
 ## 全体の流れ
 
 ```
-GitHub に push ──▶ Cloudflare Workers Builds（npm run build → npx wrangler deploy）──▶ https://new-site.<アカウント>.workers.dev/
+GitHub に push ──▶ Cloudflare Workers Builds（npm run build → npx wrangler deploy）──▶ https://kaname.<アカウント>.workers.dev/
 microCMS で公開・更新 ──Webhook──▶ デプロイフック（main）──▶ 同じくビルド・デプロイ
 ```
 
@@ -22,7 +22,7 @@ microCMS で公開・更新 ──Webhook──▶ デプロイフック（main�
 
 | 項目 | 値 |
 |---|---|
-| プロジェクト名（Worker 名） | `new-site`（`package.json` の `name` と同じにする。違うとデプロイが失敗する。名前を変えるときは両方そろえる） |
+| プロジェクト名（Worker 名） | `kaname`（`package.json` の `name` と同じにする。違うとデプロイが失敗する。名前を変えるときは両方そろえる） |
 | 本番のブランチ | `main` |
 | ビルドコマンド | `npm run build` |
 | デプロイコマンド | `npx wrangler deploy` |
@@ -46,7 +46,7 @@ Worker の **設定（Settings）→ ビルド（Build）→ 変数とシーク�
 ## 3. 動作を確かめる
 
 1. `main` にプッシュすると、ビルドとデプロイが走る（Worker の **デプロイ（Deployments）** で進み具合とログが見られる）。
-2. `https://new-site.<アカウント名>.workers.dev/` で表示を確かめる（このアドレスは `X-Robots-Tag: noindex` が付くので検索エンジンには載らない）。
+2. `https://kaname.<アカウント名>.workers.dev/` で表示を確かめる（このアドレスは `X-Robots-Tag: noindex` が付くので検索エンジンには載らない）。
 3. `main` 以外のブランチをプッシュすると、プレビュー用のアドレスができる（**デプロイ** に表示される）。
 
 ## 4. microCMS の更新で再ビルドする
