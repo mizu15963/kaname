@@ -16,25 +16,16 @@ export const SITE = {
   noindex: true,
 };
 
-// 記事
-export const BLOG = {
-  // 記事一覧（カテゴリでの絞り込みもこのページだけで行う。docs/site.md の「記事一覧」）
-  listPath: "/articles/",
-  // TOP とハブページに出す新着記事の数（続きは記事一覧で見る）
-  latestCount: 6,
-} as const;
-
-// カテゴリ（microCMS の categories のコンテンツID）
-export const CATEGORY = {
-  // ハブページ（/{id}/）があるカテゴリと、ハブページの見出し（ヘッダーのナビにも使う）・TOP のカードの説明
-  // TODO(仕様): カテゴリが決まったら差し替える。ページは src/pages/{id}.astro に作る
-  hubs: [
-    {
-      id: "sample-hub",
-      title: "サンプルカテゴリ",
-      lead: "カテゴリの説明（仮）",
-    },
+// サイト内のナビゲーション（ヘッダー・フッター・PC 幅の左側）
+// TODO(仕様): ページ構成が決まったら差し替える
+export const NAV = {
+  // ヘッダーと PC 幅の左側に並べるページ
+  main: [
+    { href: "/operator/", label: "運営者情報" },
+    { href: "/contact/", label: "お問い合わせ" },
   ],
+  // フッターだけに出すページ
+  footer: [{ href: "/privacy-policy/", label: "プライバシーポリシー" }],
 } as const;
 
 // お問い合わせフォーム（仕様: docs/contact.md）

@@ -1,6 +1,6 @@
 # サイト名（仮）
 
-記事を microCMS で管理し、Astro で作ったページを Cloudflare Workers で配信する情報サイトのリポジトリです。
+Astro で作ったページを Cloudflare Workers で配信するサイトのリポジトリです。お問い合わせの保存に microCMS を使います。
 
 - サイトの仕様: [docs/](docs/README.md)（目次）
 - 残っている作業: [docs/todo.md](docs/todo.md)（やることリスト）
@@ -12,7 +12,7 @@
 |---|---|
 | サイトの生成 | Astro 7（`@astrojs/cloudflare` アダプター。すべてのページをビルド時に作る） |
 | 見た目 | Tailwind CSS 4（色・形は `src/styles/global.css` の `@theme` で一括管理） |
-| コンテンツ管理 | microCMS（`blog`・`categories`・`contacts` の 3 API） |
+| お問い合わせの保存 | microCMS（`contacts` の API だけ） |
 | 配信 | Cloudflare Workers（Workers Builds で GitHub と接続） |
 | アクセス解析 | Google アナリティクス 4（本番のドメインでだけ計測） |
 
@@ -20,12 +20,12 @@
 
 | フォルダ | 中身 |
 |---|---|
-| `src/pages/` | ページ（URL と同じ並び。記事は `[slug].astro`） |
-| `src/components/` | 部品（ページ見出し、記事のリスト、パンくずなど） |
+| `src/pages/` | ページ（URL と同じ並び） |
+| `src/components/` | 部品（ページ見出し、ヘッダー、パンくずなど） |
 | `src/layouts/` | 全ページ共通の枠（head・ヘッダー・フッター） |
 | `src/libs/` | microCMS の取得、表示の整形、構造化データ、ビルド環境の判定 |
 | `src/constants/index.ts` | サイト共通の定数（定数はこのファイルだけに置く） |
-| `src/styles/global.css` | 色・形の定義（`@theme`）と、記事本文の見た目 |
+| `src/styles/global.css` | 色・形の定義（`@theme`） |
 | `schema/` | microCMS の項目定義（スキーマの書き出し形式） |
 | `public/` | そのまま配信するファイル（画像・アイコン・`_redirects`・`_headers`） |
 | `docs/` | 仕様書 |
@@ -49,7 +49,7 @@ Node.js 24 以上が必要です。
 
    | 名前 | 内容 |
    |---|---|
-   | `MICROCMS_API_KEY` | microCMS の API キー（`blog`・`categories` の GET と `contacts` の POST のみ許可） |
+   | `MICROCMS_API_KEY` | microCMS の API キー（`contacts` の POST のみ許可。お問い合わせフォームを手元で試すときだけ要る） |
    | `MICROCMS_SERVICE_DOMAIN` | microCMS の管理画面の URL（`https://xxxxxxxx.microcms.io`）の `xxxxxxxx` の部分 |
 
 3. 開発用のサーバーを起動し、http://localhost:4321 を開きます。
@@ -67,8 +67,6 @@ npx astro preview
 
 `astro preview` は Cloudflare と同じ仕組み（wrangler）で `dist/` を配信するので、`public/_redirects` の転送や末尾の `/` の扱いも確かめられます。
 
-- ビルドは microCMS からデータを取るため、通信が不安定だと失敗することがあります。その場合はやり直してください。
-- 固定ページと同じ URL の記事や、URL が重なる記事があると、ビルドがエラーで止まります（[docs/article.md](docs/article.md)）。
 
 ## ブランチの運用
 
@@ -82,6 +80,5 @@ GitHub Actions は使わず、Cloudflare Workers Builds だけでビルド・デ
 | きっかけ | 動き |
 |---|---|
 | `main` ブランチへのプッシュ | Cloudflare が GitHub 連携で検知し、自動でビルド・デプロイ |
-| microCMS で記事を公開・更新 | Webhook から Cloudflare のデプロイフックを呼び出し、再ビルド（サイトマップも作り直される） |
 
 デプロイフックの URL は、知っていれば誰でもビルドを起動できるため、外部に公開しないでください。
