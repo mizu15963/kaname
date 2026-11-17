@@ -1,0 +1,281 @@
+@import "tailwindcss";
+
+@theme {
+  --font-body: "Noto Sans JP", sans-serif;
+
+  /* ブランドカラー（水色。ロゴの飾りの色 #90e1e4）。サイトの色はここで一括管理する（docs/design.md の「配色」）
+     水色はボタン・バッジ・アイコンなどのワンポイントにだけ使い、広い面には使わない
+     水色は文字には使わない（白地では読めないため）。水色の上には黒文字を載せる */
+  --color-brand-50: #f0fbfc;
+  --color-brand-100: #def6f7;
+  --color-brand-200: #c5eff1;
+  --color-brand-300: #aee9eb;
+  --color-brand-400: #9fe5e8;
+  --color-brand-500: #90e1e4; /* イメージカラー（TODO(仕様): 仮の色）。CSS の変数を使えない public/favicon.svg・public/images/noimg.svg にも同じ値を書いている */
+  --color-brand-600: #6fd3d8;
+  --color-brand-700: #45bcc2;
+  --color-brand-800: #2a8f94;
+  --color-brand-900: #1d6266;
+
+  /* 役割ごとの色（ページ側はなるべくこちらを使う） */
+  --color-background: #ffffff; /* 基本背景（中央の表示領域） */
+  --color-foreground: #111111; /* 見出し・本文 */
+  --color-section: #f3f3f3; /* セクション背景 */
+  /* ワンポイントの水色（目立たせたいボタン・バッジ・アイコンの背景・文字のマーカー）。黒文字を載せる */
+  --color-highlight: var(--color-brand-500);
+  --color-highlight-hover: var(--color-brand-600);
+  --color-highlight-foreground: #111111;
+  --color-muted: var(--color-section); /* 控えめな背景 */
+  --color-muted-foreground: #5f5f5f; /* 補足テキスト。白背景とのコントラスト比 6.5 */
+  --color-line: #e2e2e2; /* 区切り線・枠線 */
+  --color-card: #ffffff;
+  --color-card-foreground: #111111;
+  /* PC 幅で中央の表示領域の左右に見える背景 */
+  --color-outside: #f4f4f5;
+  /* 主要ボタン・選択中のチップ・フッター（黒地に白文字） */
+  --color-primary: #111111;
+  --color-primary-hover: #3a3a3a;
+  /* 角丸（ルールは CLAUDE.md の「形の管理ルール」）
+     rounded-box: カード・表・パネルなどの箱 / rounded-button: ボタン（丸みの強いピル形）
+     チップ・バッジは rounded-full のまま */
+  --radius-box: 16px;
+  --radius-button: 9999px;
+
+  /* 中央の表示領域の左右に落とす影（影は原則使わないが、表示領域の境目だけは使う。docs/design.md の「形」） */
+  --shadow-app: 0 0 32px rgb(0 0 0 / 0.08);
+
+  /* リンク文字（黒＋下線で表す）。白背景とのコントラスト比 18.9 */
+  --color-link: #111111;
+  --color-link-hover: #3a3a3a;
+
+  /* 中央の表示領域の幅（スマホの画面幅。PC でもこの幅で表示する） */
+  --container-app: 440px;
+}
+
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  .border {
+    border-color: var(--color-line);
+  }
+  .border-b {
+    border-bottom-color: var(--color-line);
+  }
+  .border-t {
+    border-top-color: var(--color-line);
+  }
+  .border-l {
+    border-left-color: var(--color-line);
+  }
+  .border-r {
+    border-right-color: var(--color-line);
+  }
+  .border-x {
+    border-left-color: var(--color-line);
+    border-right-color: var(--color-line);
+  }
+  .border-y {
+    border-top-color: var(--color-line);
+    border-bottom-color: var(--color-line);
+  }
+}
+
+@layer components {
+  .prose code::before,
+  .prose code::after {
+    content: none !important;
+  }
+}
+
+body {
+  /* 背景は中央の表示領域の左右に見える色（表示領域の中は bg-background） */
+  @apply font-body bg-outside text-foreground;
+  text-underline-offset: 0.3em;
+}
+
+/*
+  記事の本文（microCMS のリッチエディタの HTML）。仕様: docs/article.md
+  色・角丸はサイトの決まりに合わせる（@theme の役割の色。gray などの色は直接使わない）
+*/
+.entry-content {
+  /* typography プラグイン（prose）の色をサイトの色に置き換える */
+  --tw-prose-body: var(--color-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-links: var(--color-link);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-counters: var(--color-muted-foreground);
+  --tw-prose-bullets: var(--color-primary);
+  --tw-prose-hr: var(--color-line);
+  --tw-prose-quotes: var(--color-foreground);
+  --tw-prose-quote-borders: var(--color-primary);
+  --tw-prose-captions: var(--color-muted-foreground);
+  --tw-prose-code: var(--color-foreground);
+  --tw-prose-th-borders: var(--color-line);
+  --tw-prose-td-borders: var(--color-line);
+  @apply text-[0.95rem] leading-loose;
+}
+
+/* 段落 */
+.entry-content p {
+  @apply mt-0 mb-5;
+}
+
+/* リンク */
+.entry-content a {
+  @apply font-normal text-link underline decoration-1 hover:text-link-hover;
+}
+
+/* 画像とキャプション */
+.entry-content img {
+  @apply h-auto max-w-full rounded-box;
+}
+
+/* 広告（ASP）のバナー画像: 元の大きさのまま、角丸にしない */
+.entry-content img.ad-image {
+  @apply my-0 inline-block rounded-none;
+}
+
+/* 埋め込み HTML（ASP の広告タグなど）: 段落と同じ間隔をあけ、はみ出さないようにする */
+.entry-content .embed {
+  @apply mb-5 max-w-full overflow-x-auto;
+}
+
+/*
+  埋め込み HTML の中の画像: 本文の画像の決まり（ブロック表示・上下の余白・角丸）を効かせず、広告タグのとおりに出す
+  （1x1 の計測画像が空白の行を作ったり、文中のテキスト広告が改行されたり、バナーが角丸になったりしないように）
+*/
+.entry-content :is(.embed, .embed-inline) img {
+  @apply m-0 inline max-w-full rounded-none;
+}
+
+.entry-content figure {
+  @apply mt-0 mb-6;
+}
+
+.entry-content figure figcaption {
+  @apply pt-2 text-sm leading-relaxed text-muted-foreground;
+}
+
+/* 見出し: h2 は灰色の箱＋左に水色の線、h3 は左に黒い線 */
+.entry-content h2 {
+  @apply mt-12 mb-5 rounded-box border-l-[6px] border-highlight bg-section px-4 py-3 text-xl leading-snug font-bold;
+}
+
+.entry-content h3 {
+  @apply mt-10 mb-4 border-l-4 border-primary pl-3 text-lg leading-snug font-bold;
+}
+
+.entry-content h4 {
+  @apply mt-8 mb-3 text-base leading-snug font-bold;
+}
+
+/* 区切り線 */
+.entry-content hr {
+  @apply my-10 border-t border-line;
+}
+
+/* 引用 */
+.entry-content blockquote {
+  @apply my-6 rounded-box border-0 bg-section px-4 py-1 font-normal not-italic text-foreground;
+}
+
+.entry-content blockquote p::before,
+.entry-content blockquote p::after {
+  content: none;
+}
+
+/* テーブル（スマホではみ出す場合は横にスクロール） */
+.entry-content table {
+  @apply my-6 block w-full overflow-x-auto border-collapse text-sm;
+}
+
+.entry-content table p {
+  @apply mb-0;
+}
+
+.entry-content th,
+.entry-content td {
+  @apply border border-line px-3 py-2 align-top;
+}
+
+.entry-content th {
+  @apply bg-section font-bold whitespace-nowrap;
+}
+
+/* 箇条書き */
+.entry-content ul {
+  @apply mb-5 list-disc pl-5;
+}
+
+.entry-content ol {
+  @apply mb-5 list-decimal pl-5;
+}
+
+.entry-content li {
+  @apply mb-1.5;
+}
+
+/*
+  動き（docs/design.md の「動き」）
+  data-reveal を付けた要素は、画面に入ったときに下からふわっと出す（Layout.astro のスクリプトが is-revealed を付ける）。
+  同時に画面に入った要素は、上から順に少しずつ遅らせて出す。画面から出たら外すので、戻ってきたときにもう一度動く。
+  隠すのはスクリプトが動く（html に js が付く）ときだけ。動きを減らす設定の端末では動かさない。
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    translate: 0 1.5rem;
+    transition:
+      opacity 0.7s var(--ease-reveal) var(--reveal-delay, 0ms),
+      translate 0.7s var(--ease-reveal) var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal].is-revealed {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* 文字のマーカー（TOP の「わかる！」）: 親が出たあと、左から右へ引く */
+  .js [data-reveal] .marker-draw {
+    background-size: 0% 100%;
+    transition: background-size 0.8s var(--ease-reveal)
+      calc(var(--reveal-delay, 0ms) + 0.5s);
+  }
+
+  .js [data-reveal].is-revealed .marker-draw {
+    background-size: 100% 100%;
+  }
+
+  /* TOP のキャッチコピーの横の飾り: ゆっくり上下に揺らす */
+  .float-slow {
+    animation: float-slow 6s ease-in-out infinite;
+  }
+
+  .float-slow-delay {
+    animation: float-slow 7s ease-in-out -3s infinite;
+  }
+}
+
+:root {
+  --ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 文字のマーカー（下半分に水色） */
+.marker-draw {
+  background-image: linear-gradient(
+    transparent 55%,
+    var(--color-highlight) 55%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}

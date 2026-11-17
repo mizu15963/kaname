@@ -1,0 +1,29 @@
+---
+// ページが見つからないとき（404）
+import { BLOG } from "@constants/index.ts";
+---
+
+<div class="py-12 text-center">
+  <p
+    class="inline-block bg-[linear-gradient(transparent_55%,var(--color-highlight)_55%)] px-2 text-5xl font-black"
+  >
+    404
+  </p>
+  <h1 class="mt-6 text-xl font-black">ページが見つかりません</h1>
+  <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+    お探しのページは、移動または削除された可能性があります。
+  </p>
+  <div class="mt-8 flex flex-wrap justify-center gap-3">
+    <a
+      href="/"
+      class="rounded-button border-2 border-primary bg-highlight px-5 py-3 text-sm font-bold text-highlight-foreground hover:bg-highlight-hover"
+      >TOP へ</a
+    >
+    <a
+      href={BLOG.listPath}
+      class="rounded-button border-2 border-primary px-5 py-3 text-sm font-bold hover:bg-section"
+    >
+      記事一覧へ
+    </a>
+  </div>
+</div>

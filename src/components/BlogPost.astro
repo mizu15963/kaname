@@ -1,0 +1,208 @@
+---
+// 記事の本文（仕様: docs/article.md）。見出し・目次・本文の見た目はサイトの決まりに合わせる
+import {
+  microCMSRichEditorHandler,
+  tocExtractor,
+  type Transformer,
+} from "microcms-rich-editor-handler";
+import Date from "@components/Date.astro";
+import PromotionNotice from "@components/PromotionNotice.astro";
+import { BLOG } from "@constants/index.ts";
+import type { Blog } from "@libs/microcms.ts";
+import { blogPublishedAt, blogRevisedAt } from "@libs/format.ts";
+
+interface Props {
+  blog: Blog;
+}
+const { blog } = Astro.props;
+
+// microCMS の画像だけ、画面幅に合わせた大きさ・webp で読み込む
+// （microCMS 以外の画像はそのまま出す。ライブラリの responsiveImageTransformer は全画像を書き換えるため使わない）
+const MICROCMS_IMAGE_HOST = "https://images.microcms-assets.io/";
+const IMAGE_WIDTHS = [640, 828, 1200, 1600];
+const microcmsImageTransformer: Transformer = ($) => {
+  $("img").each((_, img) => {
+    const $img = $(img);
+    const src = $img.attr("src");
+    $img.attr({ loading: "lazy", decoding: "async" });
+    if (!src?.startsWith(MICROCMS_IMAGE_HOST) || src.includes("?")) return;
+    $img.attr({
+      src: `${src}?w=1200&fm=webp`,
+      srcset: IMAGE_WIDTHS.map(
+        (width) => `${src}?w=${width}&fm=webp ${width}w`
+      ).join(", "),
+      sizes: "(min-width: 768px) 720px, 100vw",
+    });
+  });
+};
+
+// 目次のリンク先になるよう、id のない見出しに id を付ける
+const headingIdTransformer: Transformer = ($) => {
+  $("h2, h3").each((index, heading) => {
+    const $heading = $(heading);
+    if (!$heading.attr("id")) $heading.attr("id", `heading-${index + 1}`);
+  });
+};
+
+// サイトの外へのリンクは別タブで開く（docs/article.md の「本文」）
+// URL は変えない（ASP の計測のため）。rel は元の値（nofollow など）を残して noopener を足す。参照元を消す noreferrer は付けない
+const siteHost = (Astro.site?.hostname ?? "").replace(/^www\./, "");
+const externalLinkTransformer: Transformer = ($) => {
+  $("a[href]").each((_, link) => {
+    const $link = $(link);
+    let url: URL;
+    try {
+      url = new URL($link.attr("href") ?? "", Astro.site);
+    } catch {
+      return;
+    }
+    if (!/^https?:$/.test(url.protocol)) return;
+    if (url.hostname.replace(/^www\./, "") === siteHost) return;
+    const rel = new Set(($link.attr("rel") ?? "").split(/\s+/).filter(Boolean));
+    rel.add("noopener");
+    $link.attr({ target: "_blank", rel: [...rel].join(" ") });
+  });
+};
+
+// 本文の「［広告画像:URL|幅x高さ］」を ASP のバナー画像に戻す（microCMS には外部の画像を入れられないため。docs/article.md の「広告の画像」）
+const AD_IMAGE_MARK =
+  /［広告画像:(https?:\/\/[^|］\s"<>]+)(?:\|(\d+)x(\d+))?］/g;
+const content = (blog.content ?? "").replace(
+  AD_IMAGE_MARK,
+  (_, src, width, height) =>
+    `<img src="${src}" alt=""${width ? ` width="${width}" height="${height}"` : ""} class="ad-image">`
+);
+
+// 本文の「［埋め込み:名前］」を、記事の埋め込み HTML（embeds）に置き換える（script・iframe の広告タグなど。リッチエディタには入れられないため。docs/article.md の「埋め込み HTML」）
+// 本文の変換（microCMSRichEditorHandler）は日本語を「&#x...;」の形にして出すため、印は変換の前に英数字だけの目印に置き換え、変換の後に HTML に戻す
+// （変換の後に印を探すと見つからない。埋め込み HTML を変換に通さないのは、外部リンクの別タブなどの書き換えを中に効かせないため）
+// 印だけの段落（前後の空白・改行は無視）は段落ごと置き換える。コロンは全角でもよい。名前が見つからない印は何も出さない
+const EMBED_MARK =
+  /(?:(<p>)(?:\s|&nbsp;)*)?［埋め込み[:：]([^］<]+)］(?:(?:\s|&nbsp;|<br\s*\/?>)*(<\/p>))?/g;
+const embeds = new Map(
+  [blog.embeds ?? []]
+    .flat()
+    .map((embed) => [embed.name.trim(), embed.html ?? ""])
+);
+const embedOutputs: string[] = [];
+const contentWithEmbedMarks = content.replace(
+  EMBED_MARK,
+  (_, open, name, close) => {
+    const embed = embeds.get(name.trim());
+    if (embed === undefined) {
+      console.warn(
+        `記事「${blog.title}」（${blog.id}）の埋め込み「${name}」がありません`
+      );
+    }
+    const mark = `siteembed-${embedOutputs.length}-end`;
+    // 本文の見た目（prose の余白・画像の角丸など）が広告の中に効かないよう、囲みに not-prose を付ける（global.css の「埋め込み HTML」）
+    if (open && close) {
+      embedOutputs.push(
+        embed
+          ? `<div class="embed not-prose">${embed}</div>`
+          : ""
+      );
+      return mark;
+    }
+    embedOutputs.push(
+      embed ? `<span class="embed-inline not-prose">${embed}</span>` : ""
+    );
+    return `${open ?? ""}${mark}${close ?? ""}`;
+  }
+);
+
+const { html, data } = await microCMSRichEditorHandler(contentWithEmbedMarks, {
+  transformers: [
+    microcmsImageTransformer,
+    headingIdTransformer,
+    externalLinkTransformer,
+  ],
+  extractors: {
+    toc: [tocExtractor({ ignoreLevels: [1, 4, 5] })],
+  },
+});
+const toc = data.toc;
+
+const bodyHtml = html.replace(
+  /siteembed-(\d+)-end/g,
+  (_, index) => embedOutputs[Number(index)]
+);
+
+const publishedAt = blogPublishedAt(blog);
+const revisedAt = blogRevisedAt(blog);
+// 更新日は公開日と日付が違うときだけ出す
+const showRevised = revisedAt.slice(0, 10) !== publishedAt.slice(0, 10);
+---
+
+<article>
+  {/* 記事の見出し: ページ見出しの形（太字）。上に日付とカテゴリ */}
+  <header class="pt-2">
+    <p class="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+      <Date date={publishedAt} />
+      {
+        showRevised && (
+          <span class="text-muted-foreground">
+            （更新 <Date date={revisedAt} />）
+          </span>
+        )
+      }
+      {
+        blog.category?.map((category) => (
+          <a
+            href={`${BLOG.listPath}?category=${category.id}`}
+            class="rounded-full bg-highlight px-3 py-0.5 text-xs font-bold text-highlight-foreground hover:underline"
+          >
+            {category.name}
+          </a>
+        ))
+      }
+    </p>
+    <h1 class="mt-3 text-[1.45rem] font-black leading-snug tracking-tight">
+      {blog.title}
+    </h1>
+  </header>
+
+  <div class="mt-6">
+    <PromotionNotice />
+  </div>
+
+  {
+    blog.thumbnail?.url && (
+      <img
+        src={`${blog.thumbnail.url}?w=1200&q=75`}
+        alt=""
+        width={blog.thumbnail.width}
+        height={blog.thumbnail.height}
+        class="mt-6 h-auto w-full rounded-box"
+      />
+    )
+  }
+
+  {/* 目次: 枠線の箱。見出しの階層は字下げで表す */}
+  {
+    toc.length > 0 && (
+      <nav aria-label="目次" class="mt-8 rounded-box bg-section p-5">
+        <p class="text-sm font-bold">目次</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          {toc.map((item) => (
+            <li
+              class:list={[
+                "border-l-2 border-primary pl-3",
+                { 3: "ml-4" }[item.level] ?? "",
+              ]}
+            >
+              <a
+                href={`#${item.id}`}
+                class="block leading-relaxed hover:underline"
+              >
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )
+  }
+
+  <div set:html={bodyHtml} class="entry-content prose mt-8 max-w-none" />
+</article>

@@ -1,0 +1,59 @@
+---
+// 記事の並び（仕様: docs/article.md）。区切り線で区切ったリスト（左に小さめの画像）
+// 記事一覧の絞り込み（CategoryFilter）は、各行の data-categories を見て表示・非表示を切り替える
+import Date from "@components/Date.astro";
+import type { BlogSummary } from "@libs/microcms.ts";
+import { blogPath, blogPublishedAt, blogThumbnail } from "@libs/format.ts";
+
+interface Props {
+  blogs: BlogSummary[];
+}
+
+const { blogs }: Props = Astro.props;
+---
+
+{
+  blogs.length === 0 ? (
+    <p class="border-y border-line py-10 text-center text-sm text-muted-foreground">
+      まだ記事がありません。
+    </p>
+  ) : (
+    <ul class="border-t border-line" data-blog-list>
+      {blogs.map((blog) => (
+        <li
+          class="border-b border-line"
+          data-categories={(blog.category ?? [])
+            .map((category) => category.id)
+            .join(" ")}
+        >
+          <a href={blogPath(blog)} class="group flex gap-4 py-4">
+            {/* 画像はホバーで少し拡大する（枠の外にははみ出さない） */}
+            <span class="w-28 shrink-0 self-start overflow-hidden rounded-box border border-line">
+              <img
+                src={blogThumbnail(blog, 480)}
+                alt=""
+                width="480"
+                height="270"
+                loading="lazy"
+                class="aspect-video w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transition-none"
+              />
+            </span>
+            <div class="min-w-0">
+              <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+                <Date date={blogPublishedAt(blog)} />
+                {(blog.category ?? []).map((category) => (
+                  <span class="rounded-full bg-highlight px-2 py-0.5 font-bold text-highlight-foreground">
+                    {category.name}
+                  </span>
+                ))}
+              </p>
+              <h2 class="mt-1.5 line-clamp-3 text-[0.95rem] font-bold leading-snug group-hover:underline">
+                {blog.title}
+              </h2>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

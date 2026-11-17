@@ -1,0 +1,26 @@
+---
+// ハブページのサンプル（TODO(仕様): カテゴリが決まったら、カテゴリのIDのファイル名で作り直してこのファイルを消す）
+import HubPage from "@components/HubPage.astro";
+export const prerender = true;
+---
+
+<HubPage
+  id="sample-hub"
+  heading="ハブページの見出し（仮）"
+  headingMarker="見出し"
+  listHeading="サンプルカテゴリの記事"
+  description="ハブページの説明（仮）。"
+  points={[
+    { title: "ポイント1（仮）", text: "説明（仮）" },
+    { title: "ポイント2（仮）", text: "説明（仮）" },
+    { title: "ポイント3（仮）", text: "説明（仮）" },
+  ]}
+  steps={[
+    { title: "ステップ1（仮）", text: "説明（仮）" },
+    { title: "ステップ2（仮）", text: "説明（仮）" },
+    { title: "ステップ3（仮）", text: "説明（仮）" },
+  ]}
+  faqs={[{ question: "よくある質問（仮）", answer: "回答（仮）" }]}
+>
+  <p>ハブページの導入文（仮）。</p>
+</HubPage>
