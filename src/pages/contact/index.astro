@@ -4,7 +4,6 @@
 // （microCMS に書き込むキーをブラウザに出さないため、保存はサーバー側で行う）
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/PageHeader.astro";
-import Breadcrumb from "@components/Breadcrumb.astro";
 import { CONTACT, SITE } from "@constants/index.ts";
 import {
   contactAvailable,
@@ -82,13 +81,9 @@ const borderClass = (error?: string) =>
   error ? "border-primary" : "border-line";
 ---
 
-<Layout Meta={Meta} plain>
-  <div class="space-y-8">
-    <div class="space-y-5">
-      <Breadcrumb
-        items={[{ name: "TOP", url: "/" }, { name: "お問い合わせ" }]}
-      />
-      <PageHeader title="お問い合わせ">
+<Layout Meta={Meta}>
+  <PageHeader en="Contact" title="お問い合わせ">
+    <div class="max-w-(--container-text)">
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
           営業代行・営業支援サービスのご相談、各種ツールに関するお問い合わせは、こちらのフォームよりご連絡ください。内容を確認のうえ、ご入力のメールアドレスにご連絡します。
         </p>
@@ -99,8 +94,10 @@ const borderClass = (error?: string) =>
             >プライバシーポリシー</a
           >にもとづいて適切に取り扱います。
         </p>
-      </PageHeader>
     </div>
+      </PageHeader>
+  <div class="container-page pt-10 pb-20 lg:pt-16 lg:pb-32">
+  <div class="max-w-(--container-text) space-y-8">
 
     {
       !available ? (
@@ -342,6 +339,7 @@ const borderClass = (error?: string) =>
         </form>
       )
     }
+  </div>
   </div>
 </Layout>
 

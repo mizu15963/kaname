@@ -1,20 +1,29 @@
 ---
-// ヘッダー（画面幅いっぱい・画面の上に固定。仕様: docs/design.md の「レイアウト」）
-// スマホ・タブレット幅: 左にロゴ、右にメニューのボタン（details で開閉する）。PC 幅（lg 以上）: メニューの項目を横に並べる
+// ヘッダー（画面の上に固定。仕様: docs/design.md の「レイアウト」）
+// 参考サイトと同じく、ロゴのすぐ右に英字のメニューを詰めて並べる。スマホは右のボタンで全画面のメニューを開く
+// header に backdrop-filter などを付けると、中の fixed のメニューが header の大きさに閉じ込められるので付けない
 import Logo from "@components/Logo.astro";
 import { NAV } from "@constants/index.ts";
+const current = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-20 border-b-2 border-primary bg-background">
-  <div class="flex h-14 items-center justify-between px-4 lg:h-16 lg:px-10">
+<header
+  class="sticky top-0 z-30 border-b border-transparent bg-background transition-colors data-[scrolled]:border-line"
+  data-header
+>
+  <div class="flex h-15 items-center justify-between px-5 lg:h-22 lg:justify-start lg:gap-14 lg:px-8">
     <a href="/" class="shrink-0"><Logo /></a>
 
     <nav aria-label="メニュー" class="hidden lg:block">
-      <ul class="flex items-center gap-7 text-sm font-bold">
+      <ul class="font-en flex items-center gap-9 text-sm font-semibold tracking-[0.1em]">
         {
           NAV.main.map((item) => (
             <li>
-              <a href={item.href} class="hover:underline">
+              <a
+                href={item.href}
+                aria-current={current.startsWith(item.href) ? "page" : undefined}
+                class="relative py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:text-primary hover:after:scale-x-100 aria-[current=page]:text-primary aria-[current=page]:after:scale-x-100"
+              >
                 {item.label}
               </a>
             </li>
@@ -25,48 +34,47 @@ import { NAV } from "@constants/index.ts";
 
     <details class="group lg:hidden" data-menu>
       <summary
-        class="grid size-10 cursor-pointer list-none place-items-center rounded-full hover:bg-section [&::-webkit-details-marker]:hidden"
+        class="grid size-11 cursor-pointer list-none place-items-center [&::-webkit-details-marker]:hidden"
         aria-label="メニュー"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.5"
-          stroke-linecap="round"
-          class="size-6"
-          aria-hidden="true"
-        >
-          <path d="M4 7h16M4 12h16M4 17h16" class="group-open:hidden"></path>
-          <path d="M6 6l12 12M18 6 6 18" class="hidden group-open:block"></path>
-        </svg>
+        <span class="relative block h-3 w-7" aria-hidden="true">
+          <span class="absolute inset-x-0 top-0 h-px bg-foreground transition-transform group-open:translate-y-1.5 group-open:rotate-45"></span>
+          <span class="absolute inset-x-0 bottom-0 h-px bg-foreground transition-transform group-open:-translate-y-1.5 group-open:-rotate-45"></span>
+        </span>
       </summary>
       <nav
         aria-label="メニュー"
-        class="absolute inset-x-0 top-full border-b-2 border-primary bg-background"
+        class="fixed inset-x-0 top-15 bottom-0 overflow-y-auto bg-background px-5 pt-6 pb-12"
       >
-        <div class="mx-auto max-w-app px-4 pt-2 pb-6">
-          <ul class="divide-y divide-line">
-            {
-              NAV.main.map((item) => (
-                <li>
-                  <a href={item.href} class="block py-4 font-bold hover:underline">
-                    {item.label}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
+        <ul class="border-t border-line">
+          {
+            NAV.main.map((item) => (
+              <li class="border-b border-line">
+                <a href={item.href} class="flex items-baseline justify-between py-6">
+                  <span class="font-en text-3xl font-light">{item.label}</span>
+                  <span class="text-xs text-muted-foreground">{item.ja}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
       </nav>
     </details>
   </div>
 </header>
 
 <script>
-  // メニューを開いたまま、メニューの外を押したら閉じる
+  // スクロールしたらヘッダーの下に線を出す
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const onScroll = () => header?.toggleAttribute("data-scrolled", window.scrollY > 8);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  // メニューを開いている間は後ろのページをスクロールさせない。リンクを押したら閉じる
   const menu = document.querySelector<HTMLDetailsElement>("[data-menu]");
-  document.addEventListener("click", (event) => {
-    if (menu?.open && !menu.contains(event.target as Node)) menu.open = false;
+  menu?.addEventListener("toggle", () => {
+    document.documentElement.style.overflow = menu.open ? "hidden" : "";
   });
+  menu?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => (menu.open = false))
+  );
 </script>

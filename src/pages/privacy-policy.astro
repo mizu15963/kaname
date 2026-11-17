@@ -1,9 +1,8 @@
 ---
 // プライバシーポリシー（仕様: docs/site.md の「プライバシーポリシー」）
-// プライバシーポリシー。TODO(仕様): 運営者・広告の有無・改定日を確かめて文面を直す
+// プライバシーポリシー。TODO(仕様): 会社名・窓口・制定日を確かめて文面を直す（広告の項目はコーポレートサイトなので外した）
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/PageHeader.astro";
-import Breadcrumb from "@components/Breadcrumb.astro";
 import { CONTACT, SITE } from "@constants/index.ts";
 export const prerender = true;
 
@@ -71,42 +70,32 @@ const sections: {
     ],
   },
   {
-    title: "広告（アフィリエイトプログラム）について",
-    text: "当サイトは、商品やサービスを紹介するアフィリエイトプログラムに参加しています。記事内のリンクから商品・サービスのお申し込みなどがあった場合、当サイトが紹介料を受け取ることがあります。広告を含む記事には、その旨を記事の先頭に表示しています。",
-    items: [
-      "広告の配信事業者や広告主は、広告の成果を確かめるために Cookie を使うことがあります。Cookie で集める情報に、お名前やメールアドレスなど、個人を特定する情報は含まれません。",
-      "商品・サービスのお申し込みの際に入力する情報は、各社の個人情報の取り扱いにしたがって管理されます。当サイトがその情報を受け取ることはありません。",
-    ],
-  },
-  {
     title: "このポリシーの変更",
     text: "法令の改正や運営方針の変更などにあわせて、このポリシーの内容を見直し、改善に努めます。変更後のプライバシーポリシーは、このページでお知らせします。",
   },
   {
     title: "お問い合わせ窓口",
-    text: `個人情報の開示・訂正・削除などに関するお問い合わせは、お問い合わせフォームからご連絡ください。（運営者: ${SITE.title} 代表 伊藤 颯汰）`,
+    text: `個人情報の開示・訂正・削除などに関するお問い合わせは、お問い合わせフォームからご連絡ください。（運営者: ${SITE.title}）`,
     links: [
       { href: CONTACT.path, label: "お問い合わせフォーム" },
-      { href: "/operator/", label: "運営者情報" },
+      { href: "/company/", label: "会社概要" },
     ],
   },
 ];
 ---
 
-<Layout Meta={Meta} plain>
-  <div class="space-y-8">
-    <div class="space-y-5">
-      <Breadcrumb
-        items={[{ name: "TOP", url: "/" }, { name: "プライバシーポリシー" }]}
-      />
-      <PageHeader title="プライバシーポリシー">
+<Layout Meta={Meta}>
+  <PageHeader en="Privacy Policy" title="プライバシーポリシー">
+    <div class="max-w-(--container-text)">
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
           「{
             SITE.title
           }」（以下「当サイト」）は、お預かりした個人情報を、以下のプライバシーポリシー（個人情報保護方針）にしたがって適切に取り扱います。
         </p>
-      </PageHeader>
     </div>
+      </PageHeader>
+  <div class="container-page pt-10 pb-20 lg:pt-16 lg:pb-32">
+  <div class="max-w-(--container-text) space-y-8">
 
     {/* 各項目: 水色の丸に番号＋見出し、区切り線で区切る */}
     <div class="border-t-2 border-primary">
@@ -153,5 +142,6 @@ const sections: {
     <p class="text-right text-sm text-muted-foreground">
       制定日: {establishedAt}
     </p>
+  </div>
   </div>
 </Layout>

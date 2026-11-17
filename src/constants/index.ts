@@ -2,27 +2,29 @@
 
 // サイト全体の設定
 export const SITE = {
-  // TODO(仕様): サイト名・キャッチコピー・説明文は仕様が決まったら差し替える（docs/todo.md）
-  title: "サイト名（仮）",
-  // サイト名の別の書き方（構造化データの alternateName。Google がサイト名を見分ける手がかりにする）
+  // TODO(仕様): 会社の正式名称が決まったら差し替える（ロゴも未着。docs/todo.md）
+  title: "会社名（仮）",
+  // サイト名の別の書き方（構造化データの alternateName。英字表記などが決まったら入れる）
   alternateNames: [] as string[],
   // 構造化データの Organization に入れるロゴ
   logo: "/images/logo.png",
-  // キャッチコピー（TOP の見出しと PC 幅の左側に出す）
-  catchphrase: "キャッチコピー（仮）",
-  description: "サイト名（仮）は、〇〇について解説する情報サイトです。",
+  // メインコピー（制作指示書の 03 ①）
+  catchphrase: "ビジネスの可能性を、さらに先へ。",
+  description:
+    "営業代行・営業支援を中心に、各種ツール・システムの販売まで。人と企業をつなぎ、新たなビジネスの可能性を広げるパートナーです。",
   // true にすると全ページを noindex にする。本番ドメインで公開する前に必ず false にする（docs/site.md の「サイト全体の noindex」）
   // workers.dev のアドレスとプレビューのビルドは false でも検索エンジンに載らない（public/_headers・src/libs/env.ts）
   noindex: true,
 };
 
-// サイト内のナビゲーション（ヘッダー・フッター・PC 幅の左側）
-// TODO(仕様): ページ構成が決まったら差し替える
+// サイト内のナビゲーション（ヘッダー・フッター）。制作指示書の 02
 export const NAV = {
-  // ヘッダーと PC 幅の左側に並べるページ
+  // ヘッダーに並べるページ（英字はメニューの表示、ja はスマホのメニューとフッターで添える和文）
   main: [
-    { href: "/operator/", label: "運営者情報" },
-    { href: "/contact/", label: "お問い合わせ" },
+    { href: "/about/", label: "ABOUT", ja: "私たちについて" },
+    { href: "/service/", label: "SERVICE", ja: "事業内容" },
+    { href: "/company/", label: "COMPANY", ja: "会社概要" },
+    { href: "/contact/", label: "CONTACT", ja: "お問い合わせ" },
   ],
   // フッターだけに出すページ
   footer: [{ href: "/privacy-policy/", label: "プライバシーポリシー" }],
