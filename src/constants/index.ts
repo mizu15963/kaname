@@ -40,6 +40,7 @@ export const CONTACT = {
   // 入力の文字数の上限（いたずらや誤送信の防止）
   maxLength: {
     name: 50,
+    company: 100,
     email: 254,
     message: 3000,
   },
