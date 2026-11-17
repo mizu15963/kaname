@@ -1,25 +1,11 @@
 ---
 // フッター（画面幅いっぱい。黒地に白文字。仕様: docs/design.md の「レイアウト」）
 import Logo from "@components/Logo.astro";
-import { BLOG, CATEGORY, CONTACT, SITE } from "@constants/index.ts";
+import { NAV, SITE } from "@constants/index.ts";
 
 const groups = [
-  {
-    title: "カテゴリ",
-    links: CATEGORY.hubs.map((hub) => ({
-      href: `/${hub.id}/`,
-      label: hub.title,
-    })),
-  },
-  {
-    title: "サイトについて",
-    links: [
-      { href: BLOG.listPath, label: "記事一覧" },
-      { href: "/operator/", label: "運営者情報" },
-      { href: "/privacy-policy/", label: "プライバシーポリシー" },
-      { href: CONTACT.path, label: "お問い合わせ" },
-    ],
-  },
+  { title: "メニュー", links: [...NAV.main] },
+  { title: "サイトについて", links: [...NAV.footer] },
 ];
 ---
 

@@ -11,7 +11,7 @@
 
 1. **ドメインプロパティ** を作り、DNS の TXT レコードで所有権を確認する（DNS は Cloudflare。作り直しや URL の変化に左右されない）。
 2. `ANALYTICS.googleSiteVerification` は、HTML タグで確認するときだけ入れる（通常は空のまま）。
-3. 公開したら `https://www.<ドメイン>/sitemap.xml` を送信し、TOP とハブページを URL 検査でインデックス登録をリクエストする。robots.txt が取得できているか確かめる。
+3. 公開したら `https://www.<ドメイン>/sitemap.xml` を送信し、TOP と主なページを URL 検査でインデックス登録をリクエストする。robots.txt が取得できているか確かめる。
 
 ## 公開後に見ること
 

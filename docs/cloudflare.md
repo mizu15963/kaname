@@ -1,7 +1,7 @@
 # Cloudflare（ビルド・配信）
 
 **Cloudflare Workers Builds** で GitHub のリポジトリとつなぎ、ビルドとデプロイを Cloudflare だけで行います（Cloudflare Pages や GitHub Actions は使いません）。
-`main` にプッシュすると本番に、それ以外のブランチをプッシュするとプレビューのアドレスにデプロイされます。microCMS で記事を公開・更新したときも、Webhook で `main` を再ビルドします。
+`main` にプッシュすると本番に、それ以外のブランチをプッシュするとプレビューのアドレスにデプロイされます。
 
 お問い合わせフォーム（`/contact/`）以外はビルド時に作るため、Worker はほぼ静的ファイルを配信するだけです。お問い合わせフォームだけは Worker が送信を受け取るので、実行時の変数が要ります（[contact.md](contact.md) の「設定の手順」）。
 
@@ -11,7 +11,6 @@
 
 ```
 GitHub に push ──▶ Cloudflare Workers Builds（npm run build → npx wrangler deploy）──▶ https://kaname.<アカウント>.workers.dev/
-microCMS で公開・更新 ──Webhook──▶ デプロイフック（main）──▶ 同じくビルド・デプロイ
 ```
 
 ## 1. Worker を作って GitHub とつなぐ
@@ -31,16 +30,14 @@ microCMS で公開・更新 ──Webhook──▶ デプロイフック（main�
 
 ## 2. ビルド用の変数を入れる
 
-Worker の **設定（Settings）→ ビルド（Build）→ 変数とシークレット（Variables and secrets）** に入れます。
+Worker の **設定（Settings）→ ビルド（Build）→ 変数とシークレット（Variables and secrets）** に入れます。ビルドは microCMS を読まないので、microCMS の変数はビルドのほうには要りません（入っていても害はありません）。
 
 | 名前 | 種類 | 内容 |
 |---|---|---|
-| `MICROCMS_SERVICE_DOMAIN` | テキスト | microCMS の管理画面の URL（`https://xxxxxxxx.microcms.io`）の `xxxxxxxx` |
-| `MICROCMS_API_KEY` | シークレット | microCMS の API キー（[microcms.md](microcms.md) の「API キー」） |
 | `NODE_VERSION` | テキスト | `24`（`package.json` の `engines.node` と同じ版） |
 
 - 変数を入れた後、最初のビルドが失敗していたら **デプロイ（Deployments）→ 再試行（Retry build）** でやり直す。
-- 実行時の変数（Settings → Variables and Secrets）は、お問い合わせフォーム用に別に入れます（[contact.md](contact.md) の「設定の手順」）。ビルド用の変数は実行時には読まれません。
+- microCMS と Turnstile の変数は、お問い合わせフォーム用に **実行時の変数**（Settings → Variables and Secrets）に入れます（[contact.md](contact.md) の「設定の手順」）。ビルド用の変数は実行時には読まれません。
 - `WORKERS_CI_BRANCH` は Cloudflare がビルド時に自動で入れます。`main` 以外のブランチのビルドは、全ページが noindex になります（[site.md](site.md) の「プレビュー」）。
 
 ## 3. 動作を確かめる
@@ -49,15 +46,7 @@ Worker の **設定（Settings）→ ビルド（Build）→ 変数とシーク�
 2. `https://kaname.<アカウント名>.workers.dev/` で表示を確かめる（このアドレスは `X-Robots-Tag: noindex` が付くので検索エンジンには載らない）。
 3. `main` 以外のブランチをプッシュすると、プレビュー用のアドレスができる（**デプロイ** に表示される）。
 
-## 4. microCMS の更新で再ビルドする
-
-1. Cloudflare: Worker の **設定 → ビルド → デプロイフック（Deploy hooks）** で、ブランチ `main` のフックを作り、URL をコピーする。
-2. microCMS: `blog` と `categories` の **API 設定 → Webhook → カスタム通知** に、その URL を登録する。通知のタイミングは「コンテンツの公開・公開終了・削除」など、公開中の内容が変わるもの（[microcms.md](microcms.md) の「Webhook」）。
-3. microCMS で記事を1本公開し、Cloudflare の **デプロイ** にビルドが増えること、workers.dev に記事が出ることを確かめる。
-
-デプロイフックの URL は、知っていれば誰でもビルドを起動できるため、外部に公開しないでください。`contacts` には登録しません（お問い合わせのたびに再ビルドされるため）。
-
-## 5. 本番ドメインで公開する
+## 4. 本番ドメインで公開する
 
 ドメインが決まってから行います（[todo.md](todo.md)）。
 
@@ -75,6 +64,4 @@ Worker の **設定（Settings）→ ビルド（Build）→ 変数とシーク�
 |---|---|
 | デプロイが KV（SESSION）や IMAGES のバインディングで失敗する | `astro.config.mjs` の `session.driver` と `imageService: "passthrough"` が消えていないか確かめる |
 | デプロイが Worker 名の不一致で失敗する | `package.json` の `name` と Worker 名をそろえる |
-| ビルドが `MICROCMS_...` がないと言って失敗する | 2 の変数が「ビルド」のほうに入っているか確かめる（実行時の変数とは別） |
-| ビルドが microCMS の 401・404 で失敗する | サービスID とキー、キーの権限（`blog`・`categories` の GET）を確かめる |
 | `/xxx.html` が `/xxx` に 307 で転送される | Cloudflare の静的配信が `.html` を外す。そのまま返したいファイルは `public/_redirects` に `/xxx.html /xxx 200` を足す |

@@ -1,10 +1,7 @@
 // サイトマップ（/sitemap.xml。仕様: docs/site.md の「サイトマップ」）
-// /sitemap.xml（ビルド時に microCMS から作る）
-// microCMS からの取得に失敗したらビルドを止める（ページが抜けたサイトマップを公開しないため）
+// 固定ページを並べる。ページを足したら entries にも足す
 import type { APIRoute } from "astro";
-import { getAllBlogSummaries } from "@libs/microcms.ts";
-import { blogPath, blogRevisedAt } from "@libs/format.ts";
-import { BLOG, CATEGORY, CONTACT } from "@constants/index.ts";
+import { CONTACT } from "@constants/index.ts";
 export const prerender = true;
 
 type Entry = { path: string; lastmod?: string };
@@ -18,19 +15,13 @@ const escapeXml = (value: string) =>
 
 export const GET: APIRoute = async ({ site }) => {
   const base = site ?? new URL("https://www.example.com/");
-  const blogs = await getAllBlogSummaries();
 
-  // 載せないページ: noindex の記事、404、お問い合わせの送信完了
+  // 載せないページ: 404、お問い合わせの送信完了
   const entries: Entry[] = [
     { path: "/" },
-    ...CATEGORY.hubs.map((hub) => ({ path: `/${hub.id}/` })),
-    { path: BLOG.listPath },
     { path: "/operator/" },
     { path: "/privacy-policy/" },
     { path: CONTACT.path },
-    ...blogs
-      .filter((blog) => !blog.noindex)
-      .map((blog) => ({ path: blogPath(blog), lastmod: blogRevisedAt(blog) })),
   ];
 
   const xml = [

@@ -8,21 +8,20 @@
 
 ## このサイトの前提
 
-- 記事を microCMS で管理し、Astro の静的サイトとして Cloudflare Workers Builds でビルド・配信する情報サイト（仕様: `docs/`）。
-- すべてのページをビルド時に作る（例外はお問い合わせフォーム `/contact/` だけ。送信を受け取るためアクセス時に作る）。URL の末尾には `/` を付ける。記事の URL は `/{スラッグ}/`。
+- Astro の静的サイトを Cloudflare Workers Builds でビルド・配信する（仕様: `docs/`）。microCMS はお問い合わせの保存（`contacts`）にだけ使い、記事・カテゴリの API は作らない。
+- すべてのページをビルド時に作る（例外はお問い合わせフォーム `/contact/` だけ。送信を受け取るためアクセス時に作る）。URL の末尾には `/` を付ける。
 - 仕様が決まっていない値は `TODO(仕様)` のコメントを付けた仮の値にしている（一覧は `docs/todo.md`）。
 
 ## 定数の置き場所ルール
 
 - 定数ファイルは `src/constants/index.ts` の1つだけにする。新しい定数ファイルを作らない。
-- 定数は機能ごとのオブジェクト（`SITE`、`BLOG`、`CATEGORY` など）にまとめ、ファイル直下に単独の定数を増やさない。
+- 定数は機能ごとのオブジェクト（`SITE`、`NAV`、`CONTACT` など）にまとめ、ファイル直下に単独の定数を増やさない。
 - 使う側は必ず `@constants/index.ts` から import する。
 
 | 値の種類 | 置き場所 |
 |---|---|
 | 秘密ではなく、環境で変わらないサイト共通の設定値 | `src/constants/index.ts` |
 | 秘密の値・環境ごとに変わる値 | `.env` と Cloudflare の変数（`astro:env` で読む） |
-| 運営側が更新するコンテンツ（記事・カテゴリ） | microCMS |
 | ページの本文 | 各ページファイルに直接書く |
 | 1つのコンポーネント内でしか使わない値 | そのコンポーネント内 |
 
@@ -52,5 +51,5 @@
 
 ## API の項目定義（schema/）
 
-- microCMS の項目定義は `schema/` 配下の JSON（microCMS の「スキーマの書き出し」形式）を正とする。記事は `schema/blog.json`、カテゴリは `schema/categories.json`、お問い合わせは `schema/contacts.json`。
-- microCMS 側で項目を変更したら、スキーマを書き出して `schema/` のファイルを上書きし、`src/libs/microcms.ts` の型と `docs/microcms.md` も合わせる。
+- microCMS の項目定義は `schema/` 配下の JSON（microCMS の「スキーマの書き出し」形式）を正とする。いまはお問い合わせの `schema/contacts.json` だけ。
+- microCMS 側で項目を変更したら、スキーマを書き出して `schema/` のファイルを上書きし、`docs/microcms.md` も合わせる。

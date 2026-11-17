@@ -2,8 +2,7 @@
 // ヘッダー（画面幅いっぱい・画面の上に固定。仕様: docs/design.md の「レイアウト」）
 // スマホ・タブレット幅: 左にロゴ、右にメニューのボタン（details で開閉する）。PC 幅（lg 以上）: メニューの項目を横に並べる
 import Logo from "@components/Logo.astro";
-import HubIcon from "@components/HubIcon.astro";
-import { BLOG, CATEGORY } from "@constants/index.ts";
+import { NAV } from "@constants/index.ts";
 ---
 
 <header class="sticky top-0 z-20 border-b-2 border-primary bg-background">
@@ -13,21 +12,14 @@ import { BLOG, CATEGORY } from "@constants/index.ts";
     <nav aria-label="メニュー" class="hidden lg:block">
       <ul class="flex items-center gap-7 text-sm font-bold">
         {
-          CATEGORY.hubs.map((hub) => (
+          NAV.main.map((item) => (
             <li>
-              <a href={`/${hub.id}/`} class="hover:underline">
-                {hub.title}
+              <a href={item.href} class="hover:underline">
+                {item.label}
               </a>
             </li>
           ))
         }
-        <li>
-          <a
-            href={BLOG.listPath}
-            class="inline-block rounded-button border-2 border-primary bg-highlight px-5 py-2 text-highlight-foreground hover:bg-highlight-hover"
-            >記事一覧</a
-          >
-        </li>
       </ul>
     </nav>
 
@@ -56,26 +48,15 @@ import { BLOG, CATEGORY } from "@constants/index.ts";
         <div class="mx-auto max-w-app px-4 pt-2 pb-6">
           <ul class="divide-y divide-line">
             {
-              CATEGORY.hubs.map((hub) => (
+              NAV.main.map((item) => (
                 <li>
-                  <a
-                    href={`/${hub.id}/`}
-                    class="flex items-center gap-3 py-4 font-bold hover:underline"
-                  >
-                    <span class="grid size-9 place-items-center rounded-full bg-highlight">
-                      <HubIcon id={hub.id} class="size-5" />
-                    </span>
-                    {hub.title}
+                  <a href={item.href} class="block py-4 font-bold hover:underline">
+                    {item.label}
                   </a>
                 </li>
               ))
             }
           </ul>
-          <a
-            href={BLOG.listPath}
-            class="mt-4 block rounded-button border-2 border-primary bg-highlight py-3 text-center text-sm font-bold text-highlight-foreground hover:bg-highlight-hover"
-            >記事一覧を見る</a
-          >
         </div>
       </nav>
     </details>

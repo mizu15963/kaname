@@ -19,13 +19,16 @@ export default defineConfig({
   }),
   env: {
     schema: {
+      // microCMS はお問い合わせの保存（contacts）にだけ使い、Worker の実行時に読む。ビルドには要らない
       MICROCMS_API_KEY: envField.string({
         context: "server",
         access: "secret",
+        optional: true,
       }),
       MICROCMS_SERVICE_DOMAIN: envField.string({
         context: "server",
         access: "secret",
+        optional: true,
       }),
       // Cloudflare Turnstile（お問い合わせフォームの自動送信よけ）のサイトキーとシークレットキー。Worker の実行時の変数に入れる。
       // 未設定の間、お問い合わせフォームは「準備中」と表示する（docs/contact.md）。サイトキーは公開される値だが、実行時に読むためシークレットと同じ扱いにする
