@@ -8,6 +8,7 @@ import { CONTACT } from "@constants/index.ts";
 
 export type ContactInput = {
   name: string;
+  company: string;
   email: string;
   category: string;
   message: string;
@@ -61,6 +62,7 @@ export const emailFormatMessage = `${contactLabel("email")}の形式が正しく
 
 export const readContactForm = (form: FormData): ContactInput => ({
   name: String(form.get("name") ?? "").trim(),
+  company: String(form.get("company") ?? "").trim(),
   email: String(form.get("email") ?? "").trim(),
   category: String(form.get("category") ?? ""),
   message: String(form.get("message") ?? "").trim(),
@@ -76,6 +78,8 @@ export const validateContact = (input: ContactInput): ContactErrors => {
   if (!input.name) errors.name = `${contactLabel("name")}を入力してください。`;
   else if (input.name.length > CONTACT.maxLength.name)
     errors.name = tooLong("name");
+  if (input.company.length > CONTACT.maxLength.company)
+    errors.company = tooLong("company");
   if (!input.email)
     errors.email = `${contactLabel("email")}を入力してください。`;
   else if (input.email.length > CONTACT.maxLength.email)
@@ -123,6 +127,7 @@ export const saveContact = async (input: ContactInput) => {
     isDraft: true,
     content: {
       name: input.name,
+      company: input.company,
       email: input.email,
       // セレクトの値は配列で送る
       category: [input.category],

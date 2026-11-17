@@ -7,7 +7,7 @@
 - 配色・参考サイト・ロゴ・OG 画像・アイコン（`global.css` の `@theme`・`Logo.astro`・`public/images/`）
 - 運営者情報・プライバシーポリシーの文面（制定日は公開日）
 - PC 幅の左右（`SideNav`・`SideBanner`）を残すか。参考サイトのレイアウトに合わせて作り直す
-- お問い合わせ: 種別の選択肢、通知メールの宛先、返信の運用、自動返信の有無（[contact.md](contact.md)）
+- お問い合わせ: 通知メールの宛先、返信の運用、自動返信の有無（[contact.md](contact.md)）
 
 ## 作業
 

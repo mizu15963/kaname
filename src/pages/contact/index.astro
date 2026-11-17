@@ -29,6 +29,7 @@ if (Astro.url.hostname.endsWith(".workers.dev")) {
 const available = contactAvailable();
 let input: ContactInput = {
   name: "",
+  company: "",
   email: "",
   category: "",
   message: "",
@@ -71,7 +72,7 @@ const categories = contactSelectOptions("category");
 
 const Meta = {
   title: "お問い合わせ",
-  description: `${SITE.title}へのご意見・ご質問・お問い合わせはこちらから。`,
+  description: `${SITE.title}へのお問い合わせはこちらから。営業代行・営業支援のご相談や、各種ツールについてのお問い合わせを受け付けています。`,
 };
 
 // 入力欄の共通の見た目（スマホで拡大されないよう文字は 16px）。エラーのときは黒の太枠
@@ -89,12 +90,10 @@ const borderClass = (error?: string) =>
       />
       <PageHeader title="お問い合わせ">
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
-          {
-            SITE.title
-          }へのご意見・ご質問・記事の掲載についてのご相談などを受け付けています。内容を確認のうえ、必要に応じてご入力のメールアドレスにご連絡します。
+          営業代行・営業支援サービスのご相談、各種ツールに関するお問い合わせは、こちらのフォームよりご連絡ください。内容を確認のうえ、ご入力のメールアドレスにご連絡します。
         </p>
         <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-          運営者は金融商品取引業者ではないため、個別の銘柄の売買や資産運用のご相談にはお答えできません。ご入力いただいた個人情報は、<a
+          ご入力いただいた個人情報は、<a
             href="/privacy-policy/"
             class="font-bold text-link underline hover:text-link-hover"
             >プライバシーポリシー</a
@@ -146,7 +145,6 @@ const borderClass = (error?: string) =>
               value={input.name}
               maxlength={CONTACT.maxLength.name}
               autocomplete="name"
-              placeholder="ニックネームでもかまいません"
               required
               aria-invalid={errors.name ? "true" : undefined}
               aria-describedby={errors.name ? "contact-name-error" : undefined}
@@ -155,6 +153,28 @@ const borderClass = (error?: string) =>
             {errors.name && (
               <p id="contact-name-error" class="mt-1.5 text-sm font-bold">
                 ※ {errors.name}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label for="contact-company" class="font-bold">
+              {contactLabel("company")}
+            </label>
+            <input
+              id="contact-company"
+              type="text"
+              name="company"
+              value={input.company}
+              maxlength={CONTACT.maxLength.company}
+              autocomplete="organization"
+              aria-invalid={errors.company ? "true" : undefined}
+              aria-describedby={errors.company ? "contact-company-error" : undefined}
+              class:list={[fieldClass, borderClass(errors.company)]}
+            />
+            {errors.company && (
+              <p id="contact-company-error" class="mt-1.5 text-sm font-bold">
+                ※ {errors.company}
               </p>
             )}
           </div>
