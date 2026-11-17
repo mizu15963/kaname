@@ -3,7 +3,6 @@
 ## 仕様で決めること（決まったらコードの `TODO(仕様)` を差し替える）
 
 - サイト名・キャッチコピー・説明文（`SITE`）、本番のドメイン（`astro.config.mjs` の `site`）
-- リポジトリ名と Worker 名（`package.json` の `name`。いまは仮の `kaname`）
 - カテゴリとハブページ（`CATEGORY.hubs`・`src/pages/sample-hub.astro`・`HubIcon.astro`・microCMS の categories）
 - TOP・ハブページの文章とよくある質問
 - 配色・参考サイト・ロゴ・OG 画像・アイコン（`global.css` の `@theme`・`Logo.astro`・`public/images/`）
