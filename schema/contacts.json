@@ -41,15 +41,15 @@
       "required": false,
       "selectItems": [
         {
-          "id": "sales",
+          "id": "YYGZ3GVKKC",
           "value": "営業支援について"
         },
         {
-          "id": "tools",
+          "id": "UJ9jCFADRm",
           "value": "ツールについて"
         },
         {
-          "id": "other",
+          "id": "D9rLE9sQEE",
           "value": "その他"
         }
       ],
