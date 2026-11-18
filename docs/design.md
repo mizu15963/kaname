@@ -79,7 +79,7 @@
 
 - `data-reveal` を付けた要素は、画面に入ったら下からふわっと出す（`Layout.astro` のスクリプトと `global.css`）。
 - 画像の枠に `zoom-on-hover` を付けると、ホバーで中の画像がゆっくり少しだけ拡大する。
-- TOP のヒーロー・ABOUT US・OUR BUSINESS に、細い線を束ねたリボン状のラインを重ねる（`RibbonLines.astro` の `variant`。参考サイトの青いリボンと同じ役割で、形は独自）。CONTACT の帯と下層ページには付けない。置いた section の外へは出さない（スクロールの邪魔にならないように）。
+- TOP のヒーロー・ABOUT US・OUR BUSINESS に、細い線を束ねたリボン状のラインを重ねる（`RibbonLines.astro` の `variant`。参考サイトの青いリボンと同じ役割で、形は独自）。CONTACT の帯には付けない。下層ページは冒頭（`PageHeader`）の右側に、動かさない形で敷く（`variant="page"`。濃さ 32%、帯の下端に向かって消す）。置いた section の外へは出さない（スクロールの邪魔にならないように）。
   - 3か所は同じ作りで、形・向き・揺れ方を少しずつ変える。hero は左から右へ大きくねじれる、about は右から左へ下寄りでなだらか（本文が多いので少し薄い）、business は左上から右へ上下2つの束。
   - 画面に入ったら全ての線を同時に 4.5 秒かけて引き（1回だけ）、そのあとはゆっくり揺れる。
   - hero は縦横比を保って切り抜き、about・business は section の形に合わせて伸ばす。スマホでは about・business の線を section の上 520px だけに出す（縦に伸びすぎて本文を横切らないように）。
