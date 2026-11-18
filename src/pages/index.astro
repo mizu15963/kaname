@@ -52,7 +52,7 @@ const site = Astro.site ?? new URL(Astro.url.origin);
     />
     <div class="absolute inset-0 -z-10 bg-linear-to-t from-background from-42% to-background/0 to-60% lg:bg-linear-to-r lg:from-background lg:from-40% lg:via-background/70 lg:via-55% lg:to-background/0 lg:to-75%"></div>
     {/* ラインの演出。画像と白のグラデーションの上・コピーの下に重ねる */}
-    <RibbonLines />
+    <RibbonLines variant="hero" />
     <div class="container-page pb-16 lg:pb-0">
       <p data-reveal class="font-en text-xs tracking-[0.2em] text-primary lg:text-sm">
         SALES SUPPORT &amp; BUSINESS SOLUTIONS
@@ -70,8 +70,9 @@ const site = Astro.site ?? new URL(Astro.url.origin);
     </div>
   </section>
 
-  {/* ② ABOUT US */}
-  <section class="py-20 lg:py-40">
+  {/* ② ABOUT US（ヒーローと形を変えたラインの演出を重ねる） */}
+  <section class="relative isolate overflow-hidden py-20 lg:py-40">
+    <RibbonLines variant="about" />
     <div class="container-page grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20">
       <div>
         <SectionHeading en="ABOUT US" label="私たちについて">
@@ -99,8 +100,9 @@ const site = Astro.site ?? new URL(Astro.url.origin);
     </div>
   </section>
 
-  {/* ③ OUR BUSINESS */}
-  <section class="bg-section py-20 lg:py-40">
+  {/* ③ OUR BUSINESS（ヒーローと形を変えたラインの演出を重ねる） */}
+  <section class="relative isolate overflow-hidden bg-section py-20 lg:py-40">
+    <RibbonLines variant="business" />
     <div class="container-page">
       <SectionHeading en="OUR BUSINESS" label="事業内容">
         多様なサービスで、<br class="lg:hidden" />ビジネスを支える。

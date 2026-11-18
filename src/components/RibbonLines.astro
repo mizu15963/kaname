@@ -1,13 +1,28 @@
 ---
-// TOP のヒーローにかかる濃紺のラインの演出（docs/design.md の「動き」）
+// TOP にかかる濃紺のラインの演出（docs/design.md の「動き」）
 // 細い線を束ねて、ねじれたリボンのように画面を横切らせる。参考サイトの青いリボンと同じ役割で、形は独自
-// ・読み込み時: 全ての線を同時に、ゆっくり左から右へ引く
-// ・表示中: ゆっくり揺れる
-// ヒーローの section の中に置き、section からはみ出た部分は見せない。クリックは素通しし、乗算で重ねる
+// 置き場所は TOP のヒーロー・ABOUT US・OUR BUSINESS の3か所。形・向き・揺れ方を場所ごとに少しずつ変える（variant）
+// ・画面に入ったとき: 全ての線を同時に、ゆっくり引く（ヒーローは読み込みと同時に画面に入っている）
+// ・引いたあと: ゆっくり揺れる
+// 置いた section の中だけに出す（section に relative isolate overflow-hidden が要る）。クリックは素通しし、乗算で重ねる
+
+interface Props {
+  // hero: 左から右へ、大きくねじれる / about: 右から左へ、下寄りでなだらか / business: 左上から右へ、上下2つの束
+  variant?: "hero" | "about" | "business";
+}
+const { variant = "hero" } = Astro.props;
 
 // 2本の曲線（上端・下端）の間を等分して線を作る。制御点が上下で入れ替わるので、途中でねじれて見える
+// 線は曲線の始点から終点へ向かって引かれる
 type Curve = [number, number, number, number, number, number, number, number];
-const ribbon = (from: Curve, to: Curve, count: number) =>
+interface Strand {
+  from: Curve;
+  to: Curve;
+  count: number;
+  // 細い方の束（薄く出す）
+  sub?: boolean;
+}
+const ribbon = ({ from, to, count }: Strand) =>
   Array.from({ length: count }, (_, i) => {
     const t = i / (count - 1);
     const p = from.map((value, k) => Math.round(value + (to[k] - value) * t));
@@ -15,64 +30,136 @@ const ribbon = (from: Curve, to: Curve, count: number) =>
   });
 
 // 座標は 1440×900 の画面の上で考える（はみ出させて端が見えないようにする）
-const main = ribbon(
-  [-120, 640, 380, 140, 920, 1040, 1560, 260],
-  [-120, 860, 460, 980, 1000, 120, 1560, 470],
-  22
-);
-const sub = ribbon(
-  [-120, 180, 520, -40, 980, 520, 1560, 60],
-  [-120, 250, 560, 60, 1020, 420, 1560, 150],
-  8
-);
+// fit: slice は縦横比を保ってはみ出しを切る（ヒーローは画面の形に近いのでこちら）
+//      none は section の形に合わせて伸ばす（縦に長い section でも線が全体に行き渡る。線の太さは変わらない）
+const variants: Record<
+  NonNullable<Props["variant"]>,
+  { strands: Strand[]; stops: [string, string, string]; fit: "xMidYMid slice" | "none" }
+> = {
+  hero: {
+    strands: [
+      { from: [-120, 640, 380, 140, 920, 1040, 1560, 260], to: [-120, 860, 460, 980, 1000, 120, 1560, 470], count: 22 },
+      { from: [-120, 180, 520, -40, 980, 520, 1560, 60], to: [-120, 250, 560, 60, 1020, 420, 1560, 150], count: 8, sub: true },
+    ],
+    stops: ["brand-300", "brand-700", "brand-400"],
+    fit: "xMidYMid slice",
+  },
+  about: {
+    strands: [
+      { from: [1560, 520, 1080, 980, 560, 360, -120, 720], to: [1560, 760, 1000, 260, 480, 1000, -120, 860], count: 18 },
+      { from: [1560, 120, 1000, 300, 420, 20, -120, 220], to: [1560, 180, 960, 380, 380, 100, -120, 290], count: 6, sub: true },
+    ],
+    stops: ["brand-400", "brand-700", "brand-300"],
+    fit: "none",
+  },
+  business: {
+    strands: [
+      { from: [-120, 80, 360, 520, 1000, -120, 1560, 520], to: [-120, 260, 420, -60, 1080, 600, 1560, 680], count: 18 },
+      { from: [-120, 900, 520, 560, 900, 1000, 1560, 640], to: [-120, 980, 560, 860, 940, 760, 1560, 720], count: 8, sub: true },
+    ],
+    stops: ["brand-300", "brand-600", "brand-300"],
+    fit: "none",
+  },
+};
+const { strands, stops, fit } = variants[variant];
+const gradientId = `ribbon-gradient-${variant}`;
+// 伸ばす場所は、スマホでは section の上部（見出しのあたり）だけに出す。縦長に伸ばしすぎて線が縦に走り、本文を横切らないように
+const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto" : "inset-0";
 ---
 
-<div aria-hidden="true" class="ribbon-lines pointer-events-none absolute inset-0 -z-10 overflow-hidden mix-blend-multiply">
-  <svg class="ribbon-lines__svg h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+<div aria-hidden="true" data-variant={variant} class:list={["ribbon-lines pointer-events-none absolute -z-10 overflow-hidden mix-blend-multiply", area]}>
+  <svg class="h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio={fit} fill="none">
     <defs>
-      <linearGradient id="ribbon-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0" style="stop-color: var(--color-brand-300)" />
-        <stop offset="0.5" style="stop-color: var(--color-brand-700)" />
-        <stop offset="1" style="stop-color: var(--color-brand-400)" />
+      <linearGradient id={gradientId} x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+        {stops.map((stop, i) => <stop offset={i / 2} style={`stop-color: var(--color-${stop})`} />)}
       </linearGradient>
     </defs>
     <g class="ribbon-lines__drift">
       {
-        main.map((d, i) => (
-          <path d={d} pathLength="1" stroke="url(#ribbon-gradient)" class="ribbon-lines__path" />
-        ))
-      }
-      {
-        sub.map((d, i) => (
-          <path d={d} pathLength="1" stroke="url(#ribbon-gradient)" class="ribbon-lines__path ribbon-lines__path--sub" />
-        ))
+        strands.flatMap((strand) =>
+          ribbon(strand).map((d) => (
+            <path
+              d={d}
+              pathLength="1"
+              stroke={`url(#${gradientId})`}
+              class:list={["ribbon-lines__path", { "ribbon-lines__path--sub": strand.sub }]}
+            />
+          ))
+        )
       }
     </g>
   </svg>
 </div>
 
+<script>
+  // 画面に 20% 入ったら is-drawn を付けて線を引く（1回だけ）
+  const ribbons = document.querySelectorAll<HTMLElement>(".ribbon-lines");
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries
+          .filter((entry) => entry.isIntersecting)
+          .forEach((entry) => {
+            entry.target.classList.add("is-drawn");
+            observer.unobserve(entry.target);
+          });
+      },
+      { threshold: 0.2 }
+    );
+    ribbons.forEach((ribbon) => observer.observe(ribbon));
+  } else {
+    ribbons.forEach((ribbon) => ribbon.classList.add("is-drawn"));
+  }
+</script>
+
 <style>
+  .ribbon-lines {
+    --ribbon-opacity: 0.4;
+    --ribbon-drift-x: -40px;
+    --ribbon-drift-y: 30px;
+    --ribbon-drift-rotate: 2deg;
+    --ribbon-drift-duration: 16s;
+  }
+  /* ABOUT US は本文が多いので少し薄く、揺れも逆向きにする */
+  .ribbon-lines[data-variant="about"] {
+    --ribbon-opacity: 0.32;
+    --ribbon-drift-x: 30px;
+    --ribbon-drift-y: -20px;
+    --ribbon-drift-rotate: -1.5deg;
+    --ribbon-drift-duration: 18s;
+  }
+  .ribbon-lines[data-variant="business"] {
+    --ribbon-opacity: 0.34;
+    --ribbon-drift-x: -30px;
+    --ribbon-drift-y: -25px;
+    --ribbon-drift-rotate: 1.5deg;
+    --ribbon-drift-duration: 20s;
+  }
+
   .ribbon-lines__path {
     stroke-width: 1px;
-    stroke-opacity: 0.4;
+    stroke-opacity: var(--ribbon-opacity);
     vector-effect: non-scaling-stroke;
   }
   .ribbon-lines__path--sub {
-    stroke-opacity: 0.22;
+    stroke-opacity: calc(var(--ribbon-opacity) * 0.55);
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    /* 読み込み時に、全ての線を同時にゆっくり引く */
-    .ribbon-lines__path {
+    /* スクリプトが動くときだけ、画面に入るまで線を隠す */
+    :global(.js) .ribbon-lines__path {
       stroke-dasharray: 1;
       stroke-dashoffset: 1;
+    }
+    /* 画面に入ったら、全ての線を同時にゆっくり引く */
+    :global(.js) .ribbon-lines.is-drawn .ribbon-lines__path {
       animation: ribbon-draw 4.5s cubic-bezier(0.45, 0, 0.25, 1) 0.3s forwards;
     }
     /* ゆっくり揺らす */
     .ribbon-lines__drift {
       transform-box: view-box;
       transform-origin: center;
-      animation: ribbon-drift 16s ease-in-out infinite alternate;
+      animation: ribbon-drift var(--ribbon-drift-duration) ease-in-out infinite alternate;
     }
   }
 
@@ -86,7 +173,7 @@ const sub = ribbon(
       transform: translate(0, 0) rotate(0deg);
     }
     to {
-      transform: translate(-40px, 30px) rotate(2deg);
+      transform: translate(var(--ribbon-drift-x), var(--ribbon-drift-y)) rotate(var(--ribbon-drift-rotate));
     }
   }
 </style>
