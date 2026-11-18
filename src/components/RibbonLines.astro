@@ -176,4 +176,13 @@ const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto"
       transform: translate(var(--ribbon-drift-x), var(--ribbon-drift-y)) rotate(var(--ribbon-drift-rotate));
     }
   }
+
+  /*
+    ABOUT US・OUR BUSINESS は、線を画像や文字の上に重ねる（下に敷くと、背景になじませた画像の境目で線が途切れて見えるため）
+    ヒーローは画像と白のグラデーションの上・コピーの下のまま
+  */
+  .ribbon-lines[data-variant="about"],
+  .ribbon-lines[data-variant="business"] {
+    z-index: 10;
+  }
 </style>
