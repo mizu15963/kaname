@@ -5,14 +5,13 @@ import PageHeader from "@components/PageHeader.astro";
 import { SITE } from "@constants/index.ts";
 export const prerender = true;
 
-// TODO(仕様): 設立・連絡先は要確認（指示書 06・09）。資本金は載せない（2026-11-18 ユーザー決定）
+// 設立は年だけ書く。資本金・連絡先（メールアドレス）は載せない（2026-11-18 ユーザー決定）
 const profile = [
   { label: "会社名", value: SITE.title },
   { label: "代表者", value: "深津 秀太" },
   { label: "所在地", value: "〒443-0013\n愛知県蒲郡市大塚町産子山37番地" },
-  { label: "設立", value: "設立年月（要確認）" },
+  { label: "設立", value: "2026年" },
   { label: "事業内容", value: "営業代行・営業支援事業\n各種ツール・システム販売事業" },
-  { label: "連絡先", value: "会社メールアドレス（要確認）" },
 ];
 
 const Meta = {
