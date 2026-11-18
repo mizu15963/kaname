@@ -14,7 +14,7 @@ export const SITE = {
     "営業代行・営業支援を中心に、各種ツール・システムの販売まで。人と企業をつなぎ、新たなビジネスの可能性を広げるパートナーです。",
   // true にすると全ページを noindex にする。本番ドメインで公開する前に必ず false にする（docs/site.md の「サイト全体の noindex」）
   // workers.dev のアドレスとプレビューのビルドは false でも検索エンジンに載らない（public/_headers・src/libs/env.ts）
-  noindex: true,
+  noindex: false,
 };
 
 // サイト内のナビゲーション（ヘッダー・フッター）。制作指示書の 02

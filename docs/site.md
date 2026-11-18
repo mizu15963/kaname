@@ -58,7 +58,7 @@
 
 `SITE.noindex`（`src/constants/index.ts`）を `true` にすると、`main` のビルドも含めて全ページに `<meta name="robots" content="noindex, nofollow">` が入ります。ふだんは `false` です（`true` のまま出すと、本番のサイトが検索結果から消えます）。
 
-- いまは `true`（準備中）。**本番ドメインに切り替える前に必ず `false` にする**（[todo.md](todo.md)）。workers.dev のアドレスには「プレビュー」の3の `X-Robots-Tag: noindex` が付くので、`false` でも検索エンジンには載らない。
+- いまは `false`（2026-11-19 公開）。workers.dev のアドレスには「プレビュー」の3の `X-Robots-Tag: noindex` が付くので、`false` でも検索エンジンには載らない。
 - 本番で noindex になるのは、404・お問い合わせの送信完了のページだけ。
 
 ## サイトマップ
