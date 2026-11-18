@@ -8,5 +8,5 @@
 
 ## 作業
 
-- [ ] www なし（kaname-sales.com）を www へ転送・常に HTTPS（[cloudflare.md](cloudflare.md) の 4 の5）
+- [x] www なし（kaname-sales.com）を www へ転送・常に HTTPS（[cloudflare.md](cloudflare.md) の 4 の5。2026-11-19 設定済み）
 - [ ] Search Console の登録とサイトマップの送信（[analytics.md](analytics.md)）
