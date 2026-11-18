@@ -3,7 +3,7 @@
 // 細い線を束ねて、ねじれたリボンのように画面を横切らせる。参考サイトの青いリボンと同じ役割で、形は独自
 // 置き場所は TOP のヒーロー・ABOUT US・OUR BUSINESS の3か所。形・向き・揺れ方を場所ごとに少しずつ変える（variant）
 // 下層ページの冒頭（PageHeader）にも、動かさずに置く（variant="page"）
-// ・画面に入ったとき: 全ての線を同時に、ゆっくり引く（ヒーローは読み込みと同時に画面に入っている）
+// ・画面に入ったとき: 全ての線を同時に、ゆっくり引く（ヒーローは読み込みと同時に画面に入っている）。画面から出て戻ってきたら、もう一度引く
 // ・引いたあと: ゆっくり揺れる
 // 置いた section の中だけに出す（section に relative isolate overflow-hidden が要る）。クリックは素通しし、乗算で重ねる
 
@@ -104,21 +104,25 @@ const area = fit === "none" && !still ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 
 </div>
 
 <script>
-  // 画面に 20% 入ったら is-drawn を付けて線を引く（1回だけ）
+  // 画面に 20% 入ったら is-drawn を付けて線を引き、画面から完全に出たら外す
+  // 外しておくので、スクロールして戻ってきたときにもう一度引く（TOP の3か所。動かさない下層ページは対象外）
   const ribbons = document.querySelectorAll<HTMLElement>(".ribbon-lines:not([data-still])");
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
+    // 引く: 20% 入ったところで
+    const drawObserver = new IntersectionObserver(
       (entries) => {
-        entries
-          .filter((entry) => entry.isIntersecting)
-          .forEach((entry) => {
-            entry.target.classList.add("is-drawn");
-            observer.unobserve(entry.target);
-          });
+        entries.filter((entry) => entry.isIntersecting).forEach((entry) => entry.target.classList.add("is-drawn"));
       },
       { threshold: 0.2 }
     );
-    ribbons.forEach((ribbon) => observer.observe(ribbon));
+    // 戻す: 画面から完全に出たときだけ（見えている間に消えないように）
+    const resetObserver = new IntersectionObserver((entries) => {
+      entries.filter((entry) => !entry.isIntersecting).forEach((entry) => entry.target.classList.remove("is-drawn"));
+    });
+    ribbons.forEach((ribbon) => {
+      drawObserver.observe(ribbon);
+      resetObserver.observe(ribbon);
+    });
   } else {
     ribbons.forEach((ribbon) => ribbon.classList.add("is-drawn"));
   }
