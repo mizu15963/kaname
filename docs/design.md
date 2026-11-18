@@ -71,6 +71,11 @@
 | `part-6` | ABOUT ページの冒頭 |
 
   - 使っていない3枚: 3（都市と建築のコラージュ）、5（デザイン案のような文字入りの画像）。差し替えに使ってよい。
+- 地が明るい画像のうち、置く場所の背景色と違う色の地で浮いて見えるものは、地を背景色に加工した版（`part-N-blend.webp`。幅 1600px と 800px）を使う（2026-11-18 ユーザー指示）。
+  - `part-4-blend`（TOP の ABOUT US）: 地を白にした版。角丸の枠を付けずに置く。
+  - `part-7-blend`（TOP の SERVICE 02）・`part-8-blend`（SERVICE ページの SERVICE 02）: 地を `section`（#f4f6f9）にした版。さらに `image-blend`（`global.css`）で四辺をぼかして背景に溶け込ませる。
+  - 営業代行（`part-2`）のように、枠付きで浮いても違和感のない画像はそのまま。
+  - 背景色を変えたら、もとの画像から作り直す（明るい部分を白に寄せ、背景色を掛ける）。
 - 装飾の画像は `alt=""`。
 - ロゴは未着。いまは `Logo.astro` が社名の文字を出している。画像が届いたら `public/images/logo.png`（白地用）・`logo-white.png`（濃紺の地用）を置き、`Logo.astro` を `<img>` に替える。OG 画像にもロゴを重ねて作り直す。
 - アイコン（`favicon.svg`・`apple-touch-icon.png`・`images/icon-*.png`）はいまは濃紺の四角の仮のもの。
