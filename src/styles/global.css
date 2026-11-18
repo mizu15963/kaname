@@ -114,9 +114,9 @@ body {
 /*
   地の色になじませる画像（docs/design.md の「画像・アイコン」）
   明るい地の画像は、置く場所の背景色と同じ地の色に加工した版（public/images/parts/part-N-blend.webp）を使い、
-  さらに四辺をぼかして背景に溶け込ませる（枠の角丸は付けない）
+  さらに四辺をぼかして背景に溶け込ませる（枠の角丸は付けない）。@utility なので max-lg:image-blend のように画面幅で切り替えられる
 */
-.image-blend {
+@utility image-blend {
   mask-image:
     linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
     linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);

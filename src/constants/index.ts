@@ -48,10 +48,8 @@ export const CONTACT = {
   },
 } as const;
 
-// アクセス解析
+// 検索エンジン（アクセス解析ツールは使わない。2026-11-18 決定）
 export const ANALYTICS = {
-  // GA4 の測定ID（ページの HTML に載る公開値）。空にすると計測しない（docs/analytics.md）
-  ga4MeasurementId: "",
   // Search Console の確認用 HTML タグ（<meta name="google-site-verification" content="..."> の content の値）。
   // 確認は DNS の TXT で行うので通常は空のまま。HTML タグで確認するときだけ入れる（docs/analytics.md）
   googleSiteVerification: "",

@@ -56,7 +56,7 @@ Worker の **設定（Settings）→ ビルド（Build）→ 変数とシーク�
 4. Worker の **設定 → ドメインとルート（Domains & Routes）→ 追加 → カスタムドメイン** に `www.<ドメイン>` を入れる（同じ名前の DNS レコードが残っていると追加できないので、先に消す）。
 5. www なし（apex）: DNS に A `192.0.2.1`（ダミー）を **プロキシ（オレンジの雲）** で作り、**ルール → リダイレクトルール** で「ホスト名が `<ドメイン>` と等しい」とき `concat("https://www.<ドメイン>", http.request.uri.path)` へ 301（クエリ文字列を保持）。**SSL/TLS → エッジ証明書 → 常に HTTPS を使用** をオン。
 6. **AI Crawl Control** を確かめる。AI のクローラーのブロックや、robots.txt に AI 向けの `Disallow: /` を足す設定が既定でオンのことがあるので、止めるかどうか決める。
-7. GA4・Search Console の設定は [analytics.md](analytics.md)。
+7. Search Console の設定は [analytics.md](analytics.md)。
 
 ## うまくいかないとき
 
