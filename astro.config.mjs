@@ -5,8 +5,8 @@ import cloudflare from "@astrojs/cloudflare";
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO(仕様): 本番のドメインが決まったら差し替える（canonical・OGP・サイトマップに使う）
-  site: "https://www.example.com/",
+  // 本番のドメイン（canonical・OGP・サイトマップに使う）。www 付きを正にし、www なしは Cloudflare で転送する（docs/cloudflare.md の 4）
+  site: "https://www.kaname-sales.com/",
   // URL の末尾に「/」を付ける（docs/site.md の「URL」）
   trailingSlash: "always",
   build: { format: "directory" },

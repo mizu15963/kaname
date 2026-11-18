@@ -1,6 +1,6 @@
 # サイト全体
 
-営業代行・営業支援を主軸とし、各種ツール・システム販売も行う会社のコーポレートサイトです（制作指示書: ユーザーの PC の `D:\ito_project\kaname\sheres\`）。ページは Astro でビルド時に作り、Cloudflare Workers で配信します。ページの本文は各ページのファイルに直接書きます。microCMS はお問い合わせの保存（`contacts`）にだけ使います。本番のドメインは `astro.config.mjs` の `site`（TODO: 決まったら差し替える）。
+営業代行・営業支援を主軸とし、各種ツール・システム販売も行う会社のコーポレートサイトです（制作指示書: ユーザーの PC の `D:\ito_project\kaname\sheres\`）。ページは Astro でビルド時に作り、Cloudflare Workers で配信します。ページの本文は各ページのファイルに直接書きます。microCMS はお問い合わせの保存（`contacts`）にだけ使います。本番のドメインは `https://www.kaname-sales.com/`（`astro.config.mjs` の `site`。2026-11-18 取得、さくらで取得して Cloudflare の DNS で使う）。
 
 ## URL
 
