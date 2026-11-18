@@ -3,6 +3,7 @@
 import Layout from "@layouts/Layout.astro";
 import SectionHeading from "@components/SectionHeading.astro";
 import MoreLink from "@components/MoreLink.astro";
+import RibbonLines from "@components/RibbonLines.astro";
 import { SITE } from "@constants/index.ts";
 import { siteJsonLd, toJsonLdString } from "@libs/structuredData.ts";
 export const prerender = true;
@@ -37,7 +38,7 @@ const site = Astro.site ?? new URL(Astro.url.origin);
     />
   </Fragment>
 
-  {/* ① メインビジュアル: 左寄せの大きなコピー。画像は PC では右、スマホでは上に置き、コピーとの境目に白のグラデーションを重ねる */}
+  {/* ① メインビジュアル: 左寄せの大きなコピー。画像は PC では右、スマホでは上に置き、コピーとの境目に白のグラデーションを重ねる。その上にラインの演出 */}
   <section class="relative isolate flex min-h-[90svh] items-end overflow-hidden lg:min-h-[calc(100svh-5.5rem)] lg:items-center">
     <img
       src="/images/parts/part-1.webp"
@@ -50,6 +51,8 @@ const site = Astro.site ?? new URL(Astro.url.origin);
       class="absolute inset-x-0 top-0 -z-10 h-[58%] w-full object-cover object-[70%_center] lg:inset-y-0 lg:left-auto lg:h-full lg:w-[62%]"
     />
     <div class="absolute inset-0 -z-10 bg-linear-to-t from-background from-42% to-background/0 to-60% lg:bg-linear-to-r lg:from-background lg:from-40% lg:via-background/70 lg:via-55% lg:to-background/0 lg:to-75%"></div>
+    {/* ラインの演出。画像と白のグラデーションの上・コピーの下に重ねる */}
+    <RibbonLines />
     <div class="container-page pb-16 lg:pb-0">
       <p data-reveal class="font-en text-xs tracking-[0.2em] text-primary lg:text-sm">
         SALES SUPPORT &amp; BUSINESS SOLUTIONS
