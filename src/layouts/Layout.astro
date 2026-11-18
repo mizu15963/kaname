@@ -2,6 +2,7 @@
 // src/layouts/Layout.astro
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
+import RibbonLines from "@components/RibbonLines.astro";
 import { ANALYTICS, SITE } from "@constants/index.ts";
 import { isPreviewBuild } from "@libs/env.ts";
 import "@styles/global.css";
@@ -120,6 +121,8 @@ const noindex = SITE.noindex || Meta.noindex || isPreviewBuild;
       <slot />
     </main>
     <Footer />
+    {/* 画面全体にかかるラインの演出（docs/design.md の「動き」） */}
+    <RibbonLines />
     <script>
       // data-reveal の要素を、画面に入ったら is-revealed を付けて出し、画面の外に出たら外す（docs/design.md の「動き」）
       // 外してあるので、スクロールして戻ってきたときにもう一度動く。同時に入った要素は、上から順に 0.08 秒ずつ遅らせる

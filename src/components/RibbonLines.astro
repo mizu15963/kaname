@@ -1,0 +1,123 @@
+---
+// 画面全体にかかる濃紺のラインの演出（docs/design.md の「動き」）
+// 細い線を束ねて、ねじれたリボンのように画面を横切らせる。参考サイトの青いリボンと同じ役割で、形は独自
+// ・読み込み時: 線を左から右へ引く
+// ・表示中: ゆっくり揺れる
+// ・スクロール: ページの進み具合に合わせて上へずれ、少し傾く（Layout.astro のスクリプトが --scroll を 0〜1 で渡す）
+// 画面に固定してヘッダーより下・本文より上に重ねる。クリックは素通しし、乗算で重ねるので濃紺の地の上ではほぼ見えない
+
+// 2本の曲線（上端・下端）の間を等分して線を作る。制御点が上下で入れ替わるので、途中でねじれて見える
+type Curve = [number, number, number, number, number, number, number, number];
+const ribbon = (from: Curve, to: Curve, count: number) =>
+  Array.from({ length: count }, (_, i) => {
+    const t = i / (count - 1);
+    const p = from.map((value, k) => Math.round(value + (to[k] - value) * t));
+    return `M${p[0]} ${p[1]} C${p[2]} ${p[3]} ${p[4]} ${p[5]} ${p[6]} ${p[7]}`;
+  });
+
+// 座標は 1440×900 の画面の上で考える（はみ出させて端が見えないようにする）
+const main = ribbon(
+  [-120, 640, 380, 140, 920, 1040, 1560, 260],
+  [-120, 860, 460, 980, 1000, 120, 1560, 470],
+  22
+);
+const sub = ribbon(
+  [-120, 180, 520, -40, 980, 520, 1560, 60],
+  [-120, 250, 560, 60, 1020, 420, 1560, 150],
+  8
+);
+---
+
+<div aria-hidden="true" class="ribbon-lines pointer-events-none fixed inset-0 z-20 overflow-hidden mix-blend-multiply">
+  <svg class="ribbon-lines__svg h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+    <defs>
+      <linearGradient id="ribbon-gradient" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" style="stop-color: var(--color-brand-300)" />
+        <stop offset="0.5" style="stop-color: var(--color-brand-700)" />
+        <stop offset="1" style="stop-color: var(--color-brand-400)" />
+      </linearGradient>
+    </defs>
+    <g class="ribbon-lines__drift">
+      {
+        main.map((d, i) => (
+          <path d={d} pathLength="1" stroke="url(#ribbon-gradient)" style={`--i:${i}`} class="ribbon-lines__path" />
+        ))
+      }
+      {
+        sub.map((d, i) => (
+          <path d={d} pathLength="1" stroke="url(#ribbon-gradient)" style={`--i:${i + 6}`} class="ribbon-lines__path ribbon-lines__path--sub" />
+        ))
+      }
+    </g>
+  </svg>
+</div>
+
+<script>
+  // スクロールの進み具合（0〜1）を --scroll に入れる。動きを減らす設定の端末では入れない
+  const ribbon = document.querySelector<HTMLElement>(".ribbon-lines");
+  if (ribbon && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let ticking = false;
+    const update = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      ribbon.style.setProperty("--scroll", String(max > 0 ? scrollY / max : 0));
+      ticking = false;
+    };
+    addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true }
+    );
+    addEventListener("resize", update);
+    update();
+  }
+</script>
+
+<style>
+  .ribbon-lines__path {
+    stroke-width: 1px;
+    stroke-opacity: 0.4;
+    vector-effect: non-scaling-stroke;
+  }
+  .ribbon-lines__path--sub {
+    stroke-opacity: 0.22;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* スクロールでずらす（ずらしても端が見えないよう少し拡大しておく） */
+    .ribbon-lines__svg {
+      transform: translate3d(0, calc(var(--scroll, 0) * -14%), 0) rotate(calc(var(--scroll, 0) * -6deg)) scale(1.15);
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    /* 読み込み時に線を引く。1本ずつ少し遅らせる */
+    .ribbon-lines__path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: ribbon-draw 2.6s cubic-bezier(0.65, 0, 0.35, 1) calc(0.2s + var(--i) * 45ms) forwards;
+    }
+    /* ゆっくり揺らす */
+    .ribbon-lines__drift {
+      transform-box: view-box;
+      transform-origin: center;
+      animation: ribbon-drift 16s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes ribbon-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes ribbon-drift {
+    from {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    to {
+      transform: translate(-40px, 30px) rotate(2deg);
+    }
+  }
+</style>
