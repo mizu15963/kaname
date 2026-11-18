@@ -22,7 +22,9 @@ const services = [
     title: "各種ツール・システム販売事業",
     text: "ビジネスや個人のさまざまなニーズに応えるツール・システムを取り扱っています。商品の特性や利用目的に合わせた情報提供を行い、お客様に適したサービスのご案内を目指します。",
     href: "/service/#service-02",
-    image: "part-7",
+    image: "part-7-blend",
+    // 地の色に加工した画像を背景になじませる（営業代行の画像は枠付きのままで浮いても違和感がない）
+    blend: true,
   },
 ];
 
@@ -85,10 +87,11 @@ const site = Astro.site ?? new URL(Astro.url.origin);
         </div>
         <MoreLink href="/about/" class="mt-10 lg:mt-14">MORE ABOUT US</MoreLink>
       </div>
-      <div data-reveal class="zoom-on-hover overflow-hidden rounded-box">
+      {/* 画像は地を白（背景と同じ色）に加工した版を使い、角丸の枠を付けずに置く（左上の白い地が背景に溶け込む） */}
+      <div data-reveal>
         <img
-          src="/images/parts/part-4.webp"
-          srcset="/images/parts/part-4-800.webp 800w, /images/parts/part-4.webp 1600w"
+          src="/images/parts/part-4-blend.webp"
+          srcset="/images/parts/part-4-blend-800.webp 800w, /images/parts/part-4-blend.webp 1600w"
           sizes="(min-width: 1024px) 50vw, 100vw"
           alt=""
           width="1600"
@@ -112,7 +115,7 @@ const site = Astro.site ?? new URL(Astro.url.origin);
           services.map((service) => (
             <li data-reveal>
               <a href={service.href} class="group block">
-                <div class="zoom-on-hover overflow-hidden rounded-box">
+                <div class:list={[!service.blend && "zoom-on-hover overflow-hidden rounded-box"]}>
                   <img
                     src={`/images/parts/${service.image}.webp`}
                     srcset={`/images/parts/${service.image}-800.webp 800w, /images/parts/${service.image}.webp 1600w`}
@@ -121,7 +124,7 @@ const site = Astro.site ?? new URL(Astro.url.origin);
                     width="1600"
                     height="900"
                     loading="lazy"
-                    class="aspect-[16/9] w-full object-cover"
+                    class:list={["aspect-[16/9] w-full object-cover", service.blend && "image-blend"]}
                   />
                 </div>
                 <p class="font-en mt-6 text-sm tracking-[0.1em] text-primary">SERVICE {service.no}</p>
