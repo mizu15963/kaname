@@ -1,6 +1,6 @@
 ---
 // プライバシーポリシー（仕様: docs/site.md の「プライバシーポリシー」）
-// プライバシーポリシー。TODO(仕様): 会社名・窓口・制定日を確かめて文面を直す（広告の項目はコーポレートサイトなので外した）
+// プライバシーポリシー。TODO(仕様): 会社名・窓口・制定日を確かめて文面を直す（広告の項目はコーポレートサイトなので外した。アクセス解析は使わないので項目を置かない）
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/PageHeader.astro";
 import { CONTACT, SITE } from "@constants/index.ts";
@@ -47,27 +47,6 @@ const sections: {
   {
     title: "個人情報の開示・訂正・削除など",
     text: "ご本人から、個人情報の開示・訂正・追加・削除・利用停止などのご希望があった場合は、ご本人であることを確認したうえで、速やかに対応します。ご請求は、下記のお問い合わせ窓口からお願いします。",
-  },
-  {
-    title: "アクセス解析ツールについて",
-    text: "当サイトでは、サイトの利用状況を把握して改善に役立てるため、Google LLC が提供するアクセス解析ツール「Google アナリティクス」を利用しています。Google アナリティクスは、Cookie を使ってアクセスに関する情報（閲覧したページ、利用している端末やブラウザの種類、おおよその地域など）を集めます。集めた情報に、お名前やメールアドレスなど、個人を特定する情報は含まれません。",
-    items: [
-      "集めた情報は、Google のプライバシーポリシーにもとづいて管理されます。",
-      "ブラウザの設定で Cookie を無効にするか、Google が提供するオプトアウト アドオンを使うと、情報の収集を止めることができます。",
-    ],
-    links: [
-      {
-        href: "https://policies.google.com/technologies/partner-sites?hl=ja",
-        label:
-          "Google のサービスを使用するサイトやアプリから収集した情報の Google による使用",
-        external: true,
-      },
-      {
-        href: "https://tools.google.com/dlpage/gaoptout?hl=ja",
-        label: "Google アナリティクス オプトアウト アドオン",
-        external: true,
-      },
-    ],
   },
   {
     title: "このポリシーの変更",

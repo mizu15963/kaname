@@ -114,11 +114,24 @@ body {
 /*
   地の色になじませる画像（docs/design.md の「画像・アイコン」）
   明るい地の画像は、置く場所の背景色と同じ地の色に加工した版（public/images/parts/part-N-blend.webp）を使い、
-  さらに四辺をぼかして背景に溶け込ませる（枠の角丸は付けない）
+  さらに四辺をぼかして背景に溶け込ませる（枠の角丸は付けない）。@utility なので max-lg:image-blend のように画面幅で切り替えられる
 */
-.image-blend {
+@utility image-blend {
   mask-image:
     linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
     linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
   mask-composite: intersect;
+}
+/*
+  右下だけぼかさない版（TOP の ABOUT US のスマホ。右下の濃い部分は地と色が違っても浮かないため、くっきり残す）
+  重ね方: 右と下のぼかし → 右下の角の円で塗り戻す → 上と左のぼかしで削る（mask-composite は下の層から順に効く）
+*/
+@utility image-blend-keep-corner {
+  mask-image:
+    linear-gradient(to right, transparent, #000 10%),
+    linear-gradient(to bottom, transparent, #000 10%),
+    radial-gradient(ellipse at 100% 100%, #000 30%, transparent 60%),
+    linear-gradient(to bottom, #000 90%, transparent),
+    linear-gradient(to right, #000 90%, transparent);
+  mask-composite: intersect, intersect, add, intersect;
 }

@@ -14,7 +14,7 @@ Astro で作ったページを Cloudflare Workers で配信するサイトのリ
 | 見た目 | Tailwind CSS 4（色・形は `src/styles/global.css` の `@theme` で一括管理） |
 | お問い合わせの保存 | microCMS（`contacts` の API だけ） |
 | 配信 | Cloudflare Workers（Workers Builds で GitHub と接続） |
-| アクセス解析 | Google アナリティクス 4（本番のドメインでだけ計測） |
+| アクセス解析 | 使わない（Search Console だけ） |
 
 ## フォルダ構成
 

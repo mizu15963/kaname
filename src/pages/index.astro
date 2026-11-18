@@ -87,7 +87,7 @@ const site = Astro.site ?? new URL(Astro.url.origin);
         </div>
         <MoreLink href="/about/" class="mt-10 lg:mt-14">MORE ABOUT US</MoreLink>
       </div>
-      {/* 画像は地を白（背景と同じ色）に加工した版を使い、角丸の枠を付けずに置く（左上の白い地が背景に溶け込む） */}
+      {/* 画像は地を白（背景と同じ色）に加工した版を使い、角丸の枠を付けずに置く（左上の白い地が背景に溶け込む）。スマホは画面幅いっぱいに近く浮いて見えやすいので、右下の濃い部分を残して上・左・右上・左下をぼかす */}
       <div data-reveal>
         <img
           src="/images/parts/part-4-blend.webp"
@@ -97,7 +97,7 @@ const site = Astro.site ?? new URL(Astro.url.origin);
           width="1600"
           height="800"
           loading="lazy"
-          class="aspect-[4/3] w-full object-cover"
+          class="aspect-[4/3] w-full object-cover max-lg:image-blend-keep-corner"
         />
       </div>
     </div>

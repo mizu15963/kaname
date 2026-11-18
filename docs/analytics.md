@@ -1,11 +1,6 @@
-# アクセス解析（GA4・Search Console）
+# Search Console
 
-## GA4
-
-1. Google アナリティクスでプロパティとウェブストリーム（本番の URL）を作り、測定ID（`G-XXXXXXXXXX`）を `src/constants/index.ts` の `ANALYTICS.ga4MeasurementId` に入れる。測定ID はページの HTML に載る公開値なので、リポジトリに書いてよい。
-2. `Layout.astro` は本番のホスト（`astro.config.mjs` の `site`）で開いたときだけ計測のタグを出す。手元・workers.dev・プレビューは計測しない。
-3. データの保持期間を 14 か月にする（管理 → データの収集と修正 → データ保持）。
-4. 任意: お問い合わせの送信完了（`/contact/thanks/`）の表示をキーイベントにする。
+アクセス解析ツール（GA4 など）は使わない（2026-11-18 決定）。プライバシーポリシーにもアクセス解析の項目を置かない。使うことになったら、計測のタグとプライバシーポリシーの項目を合わせて足す。
 
 ## Search Console
 
