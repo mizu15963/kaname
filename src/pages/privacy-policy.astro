@@ -1,6 +1,6 @@
 ---
 // プライバシーポリシー（仕様: docs/site.md の「プライバシーポリシー」）
-// プライバシーポリシー。TODO(仕様): 会社名・窓口・制定日を確かめて文面を直す（広告の項目はコーポレートサイトなので外した。アクセス解析は使わないので項目を置かない）
+// プライバシーポリシー。会社名は SITE.title、窓口はお問い合わせフォーム（広告の項目はコーポレートサイトなので外した。アクセス解析は使わないので項目を置かない）
 import Layout from "@layouts/Layout.astro";
 import PageHeader from "@components/PageHeader.astro";
 import { CONTACT, SITE } from "@constants/index.ts";
@@ -12,7 +12,7 @@ const Meta = {
 };
 
 // 制定日（新サイトの公開日。内容を変えたら改定日を足す）
-const establishedAt = "20XX年X月X日"; // TODO: 公開日にする
+const establishedAt = "2026年11月19日";
 
 // links の external: true は外部サイト（別タブで開く）
 type SectionLink = { href: string; label: string; external?: boolean };
