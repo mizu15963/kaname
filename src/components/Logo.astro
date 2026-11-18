@@ -1,5 +1,6 @@
 ---
-// ロゴ（TODO(仕様): ロゴの画像が届くまで社名の文字を出す。画像にしたら public/images/logo.png・logo-white.png を置き、<img> に替える）（docs/design.md の「画像・アイコン」）
+// ロゴ（docs/design.md の「画像・アイコン」）。白地用の logo.png と、濃紺の地（フッター）用の白抜き logo-white.png
+// 画像は高さ 120px の透過 PNG（表示の約3倍）。横幅は width・height の比で決まる
 import { SITE } from "@constants/index.ts";
 
 interface Props {
@@ -10,10 +11,10 @@ interface Props {
 const { inverted = false, class: className } = Astro.props;
 ---
 
-<span
-  class:list={[
-    "inline-block text-lg leading-none font-bold tracking-[0.08em] lg:text-xl",
-    inverted ? "text-on-primary" : "text-foreground",
-    className,
-  ]}>{SITE.title}</span
->
+<img
+  src={inverted ? "/images/logo-white.png" : "/images/logo.png"}
+  alt={SITE.title}
+  width="741"
+  height="120"
+  class:list={["block h-7 w-auto lg:h-9", className]}
+/>
