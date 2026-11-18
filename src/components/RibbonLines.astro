@@ -2,15 +2,19 @@
 // TOP にかかる濃紺のラインの演出（docs/design.md の「動き」）
 // 細い線を束ねて、ねじれたリボンのように画面を横切らせる。参考サイトの青いリボンと同じ役割で、形は独自
 // 置き場所は TOP のヒーロー・ABOUT US・OUR BUSINESS の3か所。形・向き・揺れ方を場所ごとに少しずつ変える（variant）
-// ・画面に入ったとき: 全ての線を同時に、ゆっくり引く（ヒーローは読み込みと同時に画面に入っている）
+// 下層ページの冒頭（PageHeader）にも、動かさずに置く（variant="page"）
+// ・画面に入ったとき: 全ての線を同時に、ゆっくり引く（ヒーローは読み込みと同時に画面に入っている）。画面から出て戻ってきたら、もう一度引く
 // ・引いたあと: ゆっくり揺れる
 // 置いた section の中だけに出す（section に relative isolate overflow-hidden が要る）。クリックは素通しし、乗算で重ねる
 
 interface Props {
   // hero: 左から右へ、大きくねじれる / about: 右から左へ、下寄りでなだらか / business: 左上から右へ、上下2つの束
-  variant?: "hero" | "about" | "business";
+  // page: 下層ページの冒頭。左のタイトルを避けて、右側を下から右上へ抜ける。動かさない
+  variant?: "hero" | "about" | "business" | "page";
 }
 const { variant = "hero" } = Astro.props;
+// 動かさない場所（線は最初から引いた状態で、揺らさない）
+const still = variant === "page";
 
 // 2本の曲線（上端・下端）の間を等分して線を作る。制御点が上下で入れ替わるので、途中でねじれて見える
 // 線は曲線の始点から終点へ向かって引かれる
@@ -60,14 +64,22 @@ const variants: Record<
     stops: ["brand-300", "brand-600", "brand-300"],
     fit: "none",
   },
+  page: {
+    strands: [
+      { from: [300, 1000, 760, 300, 1100, 1000, 1560, 120], to: [420, 1000, 840, 900, 1180, 200, 1560, 380], count: 18 },
+      { from: [700, -100, 1000, 400, 1300, 100, 1560, 500], to: [760, -100, 1040, 300, 1340, 200, 1560, 560], count: 6, sub: true },
+    ],
+    stops: ["brand-300", "brand-700", "brand-400"],
+    fit: "none",
+  },
 };
 const { strands, stops, fit } = variants[variant];
 const gradientId = `ribbon-gradient-${variant}`;
 // 伸ばす場所は、スマホでは section の上部（見出しのあたり）だけに出す。縦長に伸ばしすぎて線が縦に走り、本文を横切らないように
-const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto" : "inset-0";
+const area = fit === "none" && !still ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto" : "inset-0";
 ---
 
-<div aria-hidden="true" data-variant={variant} class:list={["ribbon-lines pointer-events-none absolute -z-10 overflow-hidden mix-blend-multiply", area]}>
+<div aria-hidden="true" data-variant={variant} data-still={still ? "" : undefined} class:list={["ribbon-lines pointer-events-none absolute -z-10 overflow-hidden mix-blend-multiply", area]}>
   <svg class="h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio={fit} fill="none">
     <defs>
       <linearGradient id={gradientId} x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
@@ -92,21 +104,25 @@ const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto"
 </div>
 
 <script>
-  // 画面に 20% 入ったら is-drawn を付けて線を引く（1回だけ）
-  const ribbons = document.querySelectorAll<HTMLElement>(".ribbon-lines");
+  // 画面に 20% 入ったら is-drawn を付けて線を引き、画面から完全に出たら外す
+  // 外しておくので、スクロールして戻ってきたときにもう一度引く（TOP の3か所。動かさない下層ページは対象外）
+  const ribbons = document.querySelectorAll<HTMLElement>(".ribbon-lines:not([data-still])");
   if ("IntersectionObserver" in window) {
-    const observer = new IntersectionObserver(
+    // 引く: 20% 入ったところで
+    const drawObserver = new IntersectionObserver(
       (entries) => {
-        entries
-          .filter((entry) => entry.isIntersecting)
-          .forEach((entry) => {
-            entry.target.classList.add("is-drawn");
-            observer.unobserve(entry.target);
-          });
+        entries.filter((entry) => entry.isIntersecting).forEach((entry) => entry.target.classList.add("is-drawn"));
       },
       { threshold: 0.2 }
     );
-    ribbons.forEach((ribbon) => observer.observe(ribbon));
+    // 戻す: 画面から完全に出たときだけ（見えている間に消えないように）
+    const resetObserver = new IntersectionObserver((entries) => {
+      entries.filter((entry) => !entry.isIntersecting).forEach((entry) => entry.target.classList.remove("is-drawn"));
+    });
+    ribbons.forEach((ribbon) => {
+      drawObserver.observe(ribbon);
+      resetObserver.observe(ribbon);
+    });
   } else {
     ribbons.forEach((ribbon) => ribbon.classList.add("is-drawn"));
   }
@@ -128,6 +144,12 @@ const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto"
     --ribbon-drift-rotate: -1.5deg;
     --ribbon-drift-duration: 18s;
   }
+  /* 下層ページは本文の邪魔にならないよう薄めにする */
+  /* 帯の下端で線が切れて見えないよう、下に向かって消していく */
+  .ribbon-lines[data-variant="page"] {
+    --ribbon-opacity: 0.32;
+    mask-image: linear-gradient(to bottom, #000 45%, transparent 95%);
+  }
   .ribbon-lines[data-variant="business"] {
     --ribbon-opacity: 0.34;
     --ribbon-drift-x: -30px;
@@ -147,7 +169,7 @@ const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto"
 
   @media (prefers-reduced-motion: no-preference) {
     /* スクリプトが動くときだけ、画面に入るまで線を隠す */
-    :global(.js) .ribbon-lines__path {
+    :global(.js) .ribbon-lines:not([data-still]) .ribbon-lines__path {
       stroke-dasharray: 1;
       stroke-dashoffset: 1;
     }
@@ -156,7 +178,7 @@ const area = fit === "none" ? "inset-x-0 top-0 h-[520px] lg:inset-y-0 lg:h-auto"
       animation: ribbon-draw 4.5s cubic-bezier(0.45, 0, 0.25, 1) 0.3s forwards;
     }
     /* ゆっくり揺らす */
-    .ribbon-lines__drift {
+    .ribbon-lines:not([data-still]) .ribbon-lines__drift {
       transform-box: view-box;
       transform-origin: center;
       animation: ribbon-drift var(--ribbon-drift-duration) ease-in-out infinite alternate;
