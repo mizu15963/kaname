@@ -10,8 +10,8 @@
 
 ## 作業
 
-- [ ] microCMS のサービスを作り、contacts を作る（[microcms.md](microcms.md)）
+- [ ] 本番のドメインを取得したら、Turnstile のウィジェットのホスト名に足す（[contact.md](contact.md) の「設定の手順」の4）
+
 - [ ] Cloudflare Workers Builds をつなぎ、workers.dev で表示を確かめる（[cloudflare.md](cloudflare.md) の 1〜3）
-- [ ] お問い合わせ: Turnstile・実行時の変数・テスト送信・通知メール（[contact.md](contact.md)）
 - [ ] 公開前に `SITE.noindex` を `false` にする（いまは `true`）
 - [ ] 公開: DNS → カスタムドメイン → www なしの転送・常に HTTPS → AI Crawl Control → Search Console（[cloudflare.md](cloudflare.md) の 4、[analytics.md](analytics.md)）
