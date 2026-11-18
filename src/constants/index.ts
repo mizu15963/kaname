@@ -2,8 +2,8 @@
 
 // サイト全体の設定
 export const SITE = {
-  // TODO(仕様): 会社の正式名称が決まったら差し替える（ロゴも未着。docs/todo.md）
-  title: "会社名（仮）",
+  // 会社名（ロゴの表記に合わせた。2026-11-18）
+  title: "要合同会社",
   // サイト名の別の書き方（構造化データの alternateName。英字表記などが決まったら入れる）
   alternateNames: [] as string[],
   // 構造化データの Organization に入れるロゴ

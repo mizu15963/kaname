@@ -25,7 +25,7 @@
 | `highlight` | = `primary` | 必須バッジなど（白文字） |
 | `link` | = `primary` | リンク文字（下線） |
 
-濃紺は画像パーツの紺に合わせた。`brand-700` の値は CSS の変数を使えない `public/favicon.svg` にも書いている。
+濃紺は画像パーツの紺に合わせた。`public/favicon.svg` はロゴのマークの色（ロゴ画像に合わせた紺）を直接書いている。
 
 ## 文字
 
@@ -77,8 +77,9 @@
   - 営業代行（`part-2`）のように、枠付きで浮いても違和感のない画像はそのまま。
   - 背景色を変えたら、もとの画像から作り直す（明るい部分を白に寄せ、背景色を掛ける）。
 - 装飾の画像は `alt=""`。
-- ロゴは未着。いまは `Logo.astro` が社名の文字を出している。画像が届いたら `public/images/logo.png`（白地用）・`logo-white.png`（濃紺の地用）を置き、`Logo.astro` を `<img>` に替える。OG 画像にもロゴを重ねて作り直す。
-- アイコン（`favicon.svg`・`apple-touch-icon.png`・`images/icon-*.png`）はいまは濃紺の四角の仮のもの。
+- ロゴ（2026-11-18 受領。2案から横長・ゴシックの案に決定）は `Logo.astro` が `<img>` で出す。白地用 `public/images/logo.png`、濃紺の地（フッター）用の白抜き `logo-white.png`。どちらも高さ 120px（表示はスマホ 28px・PC 36px）の透過 PNG。受け取った元の画像と切り抜き版は制作用の共有フォルダ（`site-build/logo/`）に置いてある。
+- アイコン: `favicon.svg` はロゴのマーク（2つの平行四辺形）を SVG に描き直したもの。`apple-touch-icon.png`・`images/icon-*.png` はそれを白地に置いて書き出した PNG。
+- OG 画像（`public/images/og.png`、1200×630）: `part-8` を右に敷き、左を白のグラデーションにしてロゴを置いたもの。
 
 ## 動き
 
