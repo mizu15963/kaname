@@ -254,6 +254,7 @@ const borderClass = (error?: string) =>
                 必須
               </span>
             </label>
+            {/* 中身は set:text で入れる（タグの間に改行や字下げがあると、それが最初から入力欄に入ってしまうため） */}
             <textarea
               id="contact-message"
               name="message"
@@ -269,9 +270,8 @@ const borderClass = (error?: string) =>
                 "leading-relaxed",
                 borderClass(errors.message),
               ]}
-            >
-              {input.message}
-            </textarea>
+              set:text={input.message}
+            />
             {errors.message && (
               <p id="contact-message-error" class="mt-1.5 text-sm font-bold">
                 ※ {errors.message}
