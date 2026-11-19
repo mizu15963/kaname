@@ -1,5 +1,5 @@
 // 構造化データ（JSON-LD）を作る（仕様: docs/site.md の「構造化データ」）
-import { SITE } from "@constants/index.ts";
+import { COMPANY, SITE } from "@constants/index.ts";
 
 type JsonLd = Record<string, unknown>;
 
@@ -24,6 +24,18 @@ const organization = (site: URL): JsonLd => ({
   alternateName: SITE.alternateNames,
   url: absolute("/", site),
   logo: absolute(SITE.logo, site),
+  description: SITE.description,
+  // 会社情報（COMPANY ページと同じ値）。資本金・連絡先は載せない
+  address: {
+    "@type": "PostalAddress",
+    postalCode: COMPANY.postalCode,
+    addressRegion: COMPANY.region,
+    addressLocality: COMPANY.locality,
+    streetAddress: COMPANY.street,
+    addressCountry: "JP",
+  },
+  founder: { "@type": "Person", name: COMPANY.representative },
+  foundingDate: COMPANY.foundingYear,
 });
 
 // サイト（WebSite）と運営者（Organization）。TOP にだけ出す（Google は TOP のデータからサイト名を決めるため）
