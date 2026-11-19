@@ -67,7 +67,7 @@
 
 ## 構造化データ
 
-- TOP: WebSite と Organization（`siteJsonLd`）。サイト名の別の書き方（`SITE.alternateNames`）とロゴ（`SITE.logo`）も入れる。
+- TOP: WebSite と Organization（`siteJsonLd`）。サイト名の別の書き方（`SITE.alternateNames`）とロゴ（`SITE.logo`）も入れる。Organization には説明文・所在地（PostalAddress）・代表者（founder）・設立年（foundingDate）も入れる。値は `COMPANY`（`src/constants/index.ts`）にまとめ、COMPANY ページの表と共通にしている。
 - パンくずを置いたページ: BreadcrumbList（`Breadcrumb` 部品の中で出す）。
 - よくある質問を置いたページ（TOP）: FAQPage（`Faq` 部品の中で、画面に表示する質問と同じ項目から出す）。質問はページのファイルに書く。データにだけ入れて画面に出さない質問は作らない（Google のガイドライン違反になるため）。
   - Google は FAQ のリッチリザルト（検索結果で質問が開く表示）を政府・医療系の権威あるサイトに限っているため、このサイトでは表示されない見込み。検索エンジンや AI 検索がページの中身を読み取る手がかりとして入れている。

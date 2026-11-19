@@ -18,6 +18,17 @@ export const SITE = {
 };
 
 // サイト内のナビゲーション（ヘッダー・フッター）。制作指示書の 02
+// 会社情報（COMPANY ページと構造化データの Organization で使う。2026-11-18 確定）
+export const COMPANY = {
+  representative: "中澤 豊子",
+  postalCode: "443-0013",
+  region: "愛知県",
+  locality: "蒲郡市",
+  street: "大塚町産子山37番地",
+  // 設立は年だけ（月は書かない）
+  foundingYear: "2026",
+};
+
 export const NAV = {
   // ヘッダーに並べるページ（英字はメニューの表示、ja はスマホのメニューとフッターで添える和文）
   main: [
