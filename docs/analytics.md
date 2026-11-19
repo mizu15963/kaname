@@ -8,6 +8,8 @@
 2. `ANALYTICS.googleSiteVerification` は、HTML タグで確認するときだけ入れる（通常は空のまま）。
 3. 公開したら `https://www.<ドメイン>/sitemap.xml` を送信し、TOP と主なページを URL 検査でインデックス登録をリクエストする。robots.txt が取得できているか確かめる。
 
+登録状況: 2026-11-19 に kaname-sales.com をドメインプロパティで登録（Cloudflare の自動 TXT 認証）し、`https://www.kaname-sales.com/sitemap.xml` を送信済み。ドメインプロパティでは、サイトマップを `sitemap.xml` だけで入れると「無効」になるので、URL を全部入れる。
+
 ## 公開後に見ること
 
 - 翌日: サイトマップの「検出されたページ」の数。
