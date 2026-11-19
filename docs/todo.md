@@ -5,7 +5,3 @@
 - SERVICE 01 の支援領域の確定、取扱商品の正式名称・販売権限・契約形態、FX ツールの法令確認（リスク表示は載せない方針。2026-11-18 決定）（`service.astro`）
 - 特定商取引法の表示が要るか（制作指示書 08）
 - お問い合わせ: 自動返信の有無（[contact.md](contact.md)）
-
-## 作業
-
-- [ ] Search Console の登録とサイトマップの送信（[analytics.md](analytics.md)）
